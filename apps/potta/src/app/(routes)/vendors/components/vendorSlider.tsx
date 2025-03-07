@@ -21,6 +21,7 @@ import toast from 'react-hot-toast';
 
 const SliderVendor = () => {
   const [tabs, setTabs] = useState<string>('Address');
+  const [isSliderOpen, setIsSliderOpen] = useState(false);
   const context = useContext(ContextData);
   const {
     register,
@@ -77,7 +78,8 @@ const SliderVendor = () => {
     mutation.mutate(data,{
       onSuccess: () => {
         toast.success('Vendor created successfully!');
-        reset(); // Reset the form after success
+        reset();
+        setIsSliderOpen(false)
       },
       onError: (error) => {
         toast.error('Failed to create vendor');
@@ -85,10 +87,11 @@ const SliderVendor = () => {
     });
   };
   return (
-    <Slider edit={false} title={'Create New Vendor'} buttonText="vendor">
+    <Slider open={isSliderOpen}
+    setOpen={setIsSliderOpen} edit={false} title={'Create New Vendor'} buttonText="vendor">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative h-[97%] w-full"
+        className="relative h-[97%] w-full max-w-4xl"
       >
         <div className="w-full grid grid-cols-2 gap-3">
           <div>
@@ -276,7 +279,7 @@ const SliderVendor = () => {
             </div>
 
             <div
-              onClick={() => toast('hello')}
+              onClick={() => setTabs('Tax')}
               className={`px-4 py-2.5 duration-500 ease-in-out ${
                 tabs == 'Tax' &&
                 'border-b border-green-500 text-green-500 font-thin '

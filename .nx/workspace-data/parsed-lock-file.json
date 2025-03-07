@@ -13086,6 +13086,15 @@
         "hash": "sha512-nwRKGanVHGjdccsnzhFte/PULziueZxGD8LL2WojON78Mvnq7LdAMEtu2frrwld1fr3geixg3iiMBIc/LLAZpw=="
       }
     },
+    "npm:react-tailwindcss-datepicker": {
+      "type": "npm",
+      "name": "npm:react-tailwindcss-datepicker",
+      "data": {
+        "version": "2.0.0",
+        "packageName": "react-tailwindcss-datepicker",
+        "hash": "sha512-HADddzZjeOIMxkKkueAyQmiAExLXYcwgPG0Qv1oP9cjCx4/jrhbbOAbazgjJmxfhGxUw7e0Goqs+DY3htKlhAA=="
+      }
+    },
     "npm:react-textarea-autosize": {
       "type": "npm",
       "name": "npm:react-textarea-autosize",
@@ -13732,6 +13741,15 @@
         "version": "0.3.24",
         "packageName": "sockjs",
         "hash": "sha512-GJgLTZ7vYb/JtPSSZ10hsOYIvEYsjbNU+zPdIHcUaWVNUEPivzxku31865sSSud0Da0W4lEeOPlmw93zLQchuQ=="
+      }
+    },
+    "npm:sonner": {
+      "type": "npm",
+      "name": "npm:sonner",
+      "data": {
+        "version": "2.0.1",
+        "packageName": "sonner",
+        "hash": "sha512-FRBphaehZ5tLdLcQ8g2WOIRE+Y7BCfWi5Zyd8bCvBjiW8TxxAyoWZIxS661Yz6TGPqFQ4VLzOF89WEYhfynSFQ=="
       }
     },
     "npm:sort-keys": {
@@ -37004,6 +37022,16 @@
       "type": "static"
     },
     {
+      "source": "npm:react-tailwindcss-datepicker",
+      "target": "npm:dayjs",
+      "type": "static"
+    },
+    {
+      "source": "npm:react-tailwindcss-datepicker",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
       "source": "npm:react-textarea-autosize",
       "target": "npm:react",
       "type": "static"
@@ -37801,6 +37829,16 @@
     {
       "source": "npm:sockjs",
       "target": "npm:websocket-driver",
+      "type": "static"
+    },
+    {
+      "source": "npm:sonner",
+      "target": "npm:react",
+      "type": "static"
+    },
+    {
+      "source": "npm:sonner",
+      "target": "npm:react-dom",
       "type": "static"
     },
     {

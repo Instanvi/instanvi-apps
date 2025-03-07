@@ -11,14 +11,32 @@ import Button from '@potta/components/button';
 import { ContextData } from '@potta/components/context';
 import Input from '@potta/components/input';
 import Checkbox from '@potta/components/checkbox';
-import { useForm } from 'react-hook-form';
-import { ProductPayload, productSchema } from '../../../../_utils/validation';
+import { Controller, useForm } from 'react-hook-form';
+import {
+  ProductPayload,
+  productSchema,
+  UpdateProductPayload,
+  UpdateProductSchema,
+} from '../../../../_utils/validation';
 import useCreateProduct from '../../../../_hooks/useCreateProduct';
 import toast from 'react-hot-toast';
+import useUpdateProduct from '../../../../_hooks/useUpdateProduct';
 import Slider from '@potta/components/slideover';
 
-const CreateProduct = () => {
-  const [isSliderOpen, setIsSliderOpen] = useState(false);
+interface EditProductProps {
+  product: ProductPayload | null; // Existing product data
+  productId: string  // ID of the product to be edited
+  open?: boolean; // Optional controlled open state
+  setOpen?: (open: boolean) => void; // Optional setter from parent
+}
+const EditProduct: React.FC<EditProductProps> = ({ product, productId,   open: controlledOpen,
+  setOpen: setControlledOpen,}) => {
+  // Local state as fallback if no controlled state is provided
+    const [localOpen, setLocalOpen] = useState(false);
+
+    // Determine which open state to use
+    const isOpen = controlledOpen ?? localOpen;
+    const setIsOpen = setControlledOpen ?? setLocalOpen;
   const [data, setData] = useState('inventory');
   const context = useContext(ContextData);
   const {
@@ -27,9 +45,9 @@ const CreateProduct = () => {
     control,
     formState: { errors },
     reset,
-  } = useForm<ProductPayload>({
-    resolver: yupResolver(productSchema),
-    defaultValues: {
+  } = useForm<UpdateProductPayload>({
+    resolver: yupResolver(UpdateProductSchema),
+    defaultValues: product || {
       name: '',
       description: '',
       unitOfMeasure: undefined,
@@ -41,31 +59,42 @@ const CreateProduct = () => {
       taxRate: 0,
       category: '',
       image: '',
+      status: undefined,
     },
   });
+  const ProductStatusEnum = [
+    { value: 'pending', label: 'Pending' },
+    { value: 'schedule', label: 'Schedule' },
+    { value: 'complete', label: 'Complete' },
+    { value: 'enabled', label: 'Enabled' },
+    { value: 'disabled', label: 'Disabled' },
+    { value: 'available', label: 'Available' },
+    { value: 'expired', label: 'Expired' },
+    { value: 'taken', label: 'Taken' },
+  ];
 
-  const mutation = useCreateProduct();
-  const onSubmit = (data: ProductPayload) => {
+  const mutation = useUpdateProduct(productId);
+  const onSubmit = (data: UpdateProductPayload) => {
     console.log('Submitted Data:', data);
     mutation.mutate(data, {
       onSuccess: () => {
-        toast.success('Product created successfully!');
+        toast.success('Product Updated successfully!');
         reset(); // Reset the form after success
-        setIsSliderOpen(false);
+        setIsOpen(false);
       },
       onError: (error) => {
-        toast.error('Failed to create product');
+        toast.error('Failed to Update product');
       },
     });
   };
 
   return (
     <Slider
-      open={isSliderOpen}
-      setOpen={setIsSliderOpen}
-      edit={true}
-      buttonText={'Create Product'}
-      title={'Create Product'}
+    open={isOpen}
+    setOpen={setIsOpen}
+      edit={false}
+      buttonText={'update product'}
+      title={'Edit Product'}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -104,7 +133,7 @@ const CreateProduct = () => {
           </div>
         </div>
         <div className="w-full mt-5">
-          <p className="mb-3 text-gray-900 font-bold">Description</p>
+          <p className=" mb-3 text-gray-900 font-bold">Description</p>
           <textarea
             {...register('description')}
             className="w-full border outline-none p-2 h-36"
@@ -118,7 +147,9 @@ const CreateProduct = () => {
         <div className="mt-5 grid grid-cols-2 gap-5">
           <div>
             <div>
-              <label htmlFor="" className='mb-3 text-gray-900 font-bold'>Image</label>
+              <label htmlFor="" className="mb-3 text-gray-900 font-bold">
+                Image
+              </label>
               <MyDropzone />
             </div>
             <div className="mt-4">
@@ -144,7 +175,6 @@ const CreateProduct = () => {
               />
             </div>
             <div className="mt-6 flex flex-col items-start ">
-
               <Checkbox
                 label="Taxable"
                 name="taxable"
@@ -160,6 +190,22 @@ const CreateProduct = () => {
                 name={'taxRate'}
                 register={register}
                 errors={errors.taxRate}
+              />
+            </div>
+            <div className="mt-6">
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    options={ProductStatusEnum}
+                    selectedValue={field.value}
+                    onChange={field.onChange}
+                    bg="bg-white"
+                    name="Select Status"
+                    label="Status"
+                  />
+                )}
               />
             </div>
           </div>
@@ -192,7 +238,7 @@ const CreateProduct = () => {
             <p>Notes</p>
           </div>
           <div
-            onClick={() => setData('attachment')}
+            onClick={() => setData('attachement')}
             className={`px-4 py-2 bg-green-50 cursor-pointer ${
               data == 'attachement' &&
               'border-b-2 border-green-500 text-green-500'
@@ -215,26 +261,26 @@ const CreateProduct = () => {
           </div>
         </div>
         <div className="w-full mt-16 flex justify-end">
-          <div className="flex space-x-2">
-            <div>
+          <div className="text-center md:text-right mt-8 md:flex md:justify-end space-x-4">
+
               <Button
-                text={'Save and New'}
+                text={'Update Product'}
                 theme="lightBlue"
                 type={'submit'}
                 isLoading={mutation.isPending}
               />
-            </div>
-            <div>
               <Button
-                text={'Save in Close'}
-                type={'submit'}
-                isLoading={mutation.isPending}
+                text="Cancel"
+                type="button"
+                theme="gray"
+                color={true}
+                onClick={() => setIsOpen(false)}
               />
-            </div>
+
           </div>
         </div>
       </form>
     </Slider>
   );
 };
-export default CreateProduct;
+export default EditProduct;

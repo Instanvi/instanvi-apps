@@ -1,0 +1,144 @@
+import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast/headless";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { SubmitHandler, useForm } from "react-hook-form";
+import {
+  RegisterFormData,
+  registerSchema,
+} from "../../../modules/auth/utils/validations";
+import { countryList } from "@instanvi/utilities";
+import Layout from "../../../modules/auth/layout";
+import { SelectProp } from "apps/superApp/src/utils/types";
+import { useRegister } from "../../../modules/auth/hooks/useRegister";
+import { Select, Button, Checkbox, Input } from "@instanvi/ui-components";
+
+const SignUp = () => {
+  const router = useRouter();
+  const [termsChecked, setTermsChecked] = useState(false);
+  const [emailChecked, setEmailChecked] = useState(false);
+  const { isPending, mutate } = useRegister();
+
+  const methods = useForm<RegisterFormData>({
+    mode: "onChange",
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      password: "",
+      country: "",
+      email: "",
+    },
+    resolver: yupResolver(registerSchema),
+  });
+
+  const { handleSubmit, register, reset, setValue } = methods;
+  const { errors } = methods.formState;
+
+  const onSubmit: SubmitHandler<RegisterFormData> = (inputs) => {
+
+    mutate(inputs, {
+      onSuccess: (data) => {
+        toast.success(data?.message);
+        router.push(`/auth/confirm-register?email=${inputs?.email}`);
+        reset();
+      },
+      onError: (error) => {
+        const message = error?.message
+        toast.error(message as string);
+      },
+    });
+  };
+
+  const onChangeCountry = (val: SelectProp) => {
+    const value = val;
+    setValue?.("country", value?.value as string);
+  };
+
+  const onTermsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTermsChecked(e.target.checked);
+  };
+
+  const onEmailCheckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailChecked(e.target.checked);
+  };
+
+  //=========== Component ================
+  return (
+    <Layout>
+      <form
+        className="h-screen w-full items-center flex justify-center"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="mx-auto max-w-5xl relative px-4 sm:px-16 w-full xl:w-[35rem]">
+          <div className="w-full md:px-3">
+            <div className="w-full mb-5 text-left">
+              <h3 className="text-2xl">Sign Up</h3>
+              <p className="text-gray-400 my-2 text-[0.875rem]">
+                Before we start, Please enter your current location
+              </p>
+            </div>
+            <div className="grid gap-2">
+              <div className="w-full">
+                <label htmlFor="" className="font-semibold text-[0.75rem]">Country / Area of resident</label>
+                <Select
+                  options={countryList}
+                  onChange={(val) => onChangeCountry(val)}
+                />
+                {errors?.country ? (
+                  <small className="col-span-2 text-red-500">{errors?.country?.message}</small>
+                ) : null}
+              </div>
+              <div className="w-full">
+                <Input
+                  name="email"
+                  type="email"
+                  label="Email"
+                  register={register}
+                  errors={errors?.email}
+                  placeholder="catherine.shaw@gmail.com"
+                />
+              </div>
+              <div className=" w-full">
+                <Input
+                  name="password"
+                  label="Password"
+                  register={register}
+                  errors={errors?.password}
+                  placeholder="Password@123"
+                />
+              </div>
+
+              <div className="my-3 grid gap-1">
+                <Checkbox
+                  name="agreements"
+                  value={emailChecked}
+                  onChange={onEmailCheckChange}
+                  text="I agree to receive email updates"
+                />
+                <Checkbox
+                  name="terms"
+                  value={termsChecked}
+                  onChange={onTermsChange}
+                  text="I have read and agree to terms of services"
+                />
+              </div>
+            </div>
+            <div className="mt-3">
+              <Button fullWidth type="submit" value={isPending ? "Creating..." : "Create Account"} />
+
+            </div>
+            <div className="flex space-x-2 mt-8">
+              <p className="font-thin ">Already registered ? </p>
+              <Link className="text-[#0052FF] font-bold" href={"/auth/login"}>
+                Sign in
+              </Link>
+            </div>
+          </div>
+        </div>
+      </form>
+    </Layout>
+  );
+};
+
+export default SignUp;

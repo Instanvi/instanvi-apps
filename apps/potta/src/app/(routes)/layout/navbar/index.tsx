@@ -1,10 +1,10 @@
+'use client'
+
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Select from '../../../../components/select';
 import { useRouter } from 'next/navigation';
-
-// Import the "useClient" hook here
 
 const urlRouters = [
   {
@@ -20,7 +20,7 @@ const urlRouters = [
     label: "Vouchers"
   },
   {
-    value: "POS",
+    value: "pos",
     label: "POS"
   },
   {
@@ -39,35 +39,36 @@ export default function Navbar() {
   const string = pathname;
   const str = string.split("/");
   const [selected, setSeleted] = useState(
-    // eslint-disable-next-line no-constant-condition
-    str[1] == undefined || 'payments' ? 'payments' : str[1] == 'paymentls')
+    str[1] === undefined || str[1] === 'payments' ? 'payments' : str[1]
+  );
 
   const handleSelect = (value: string) => {
     router.push(`/${value}`)
     setSeleted(value)
   }
 
-  // Use the "useClient" hook for client-side actions
+  // If the current route is 'pos', don't render the navbar
+  if (str[1] === 'pos') {
+    return null;
+  }
 
   return (
-    <div className='w-full bg-red-500 sticky top-0 bg-white z-30'>
+    <div className='w-full sticky top-0 bg-white z-30'>
       <nav className="w-full sticky top-0 left-0 border-b bg-white z-10">
         <div className="px-4">
           <div className="flex justify-between">
             <div className="flex py-4 gap-20 items-center">
               <Link href={"/"} className="flex items-center ml-10 -mt-2">
               </Link>
-              <h1 className="font-medium text-[22px] -ml-14 capitalize">{str[2] == undefined ? str[1] : str[2]}</h1>
+              <h1 className="font-medium text-[22px] -ml-14 capitalize">{str[2] === undefined ? str[1] : str[2]}</h1>
             </div>
-            <div className="flex gap-8    px-4">
-              {/* <Icon icon="Bell" size={23} /> */}
-              <div className=' w-full'>
+            <div className="flex gap-8 px-4">
+              <div className='w-full'>
                 <Select
                   options={urlRouters}
                   selectedValue={selected.toString()}
-                  onChange={(value) => { handleSelect(value) }}
+                  onChange={(value: string) => { handleSelect(value) }}
                   bg={''}
-
                 />
               </div>
             </div>

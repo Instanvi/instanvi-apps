@@ -26,7 +26,7 @@ const SidebarsPayroll = () => {
     >
       <Menu className="relative h-[76vh]" closeOnClick>
         <MenuItem
-          className="mt-4 font-thin"
+          className="mt-4 font-normal"
           href="/"
           icon={<img src="/icons/Potta.svg" className="h-10 mt-2" alt="" />}
         >
@@ -35,7 +35,7 @@ const SidebarsPayroll = () => {
 
         <MenuItem
           active={str[2] == 'overview' ? true : false}
-          className="mt-8   font-thin"
+          className="mt-8   font-normal"
           href="/payroll/overview"
           icon={svgIcons.dashboard(str[2] == 'overview' ? 'white' : 'black')}
         >
@@ -44,7 +44,7 @@ const SidebarsPayroll = () => {
         </MenuItem>
         <MenuItem
           active={str[2] == 'people' ? true : false}
-          className="mt-4 font-thin"
+          className="mt-4 font-normal"
           href="/payroll/people"
           icon={svgIcons.users(str[2] == 'people' ? 'white' : 'black')}
         >
@@ -57,21 +57,22 @@ const SidebarsPayroll = () => {
           icon={svgIcons.clock(
             str[2] == 'timesheet' || str[2] == 'shifts' ? 'black' : 'black'
           )}
-          className={`mt-4 font-thin ${
+          className={`mt-4 font-normal ${
             str[2] == 'timesheet' || str[2] == 'shifts' ? 'active-submenu' : ''
           }`}
+          active={str[2] == 'timesheet' ? true : false}
           defaultOpen={str[2] == 'timesheet' || str[2] == 'shifts'}
         >
           <MenuItem
             active={str[2] == 'timesheet' ? true : false}
-            className="pl-6 font-thin"
+            className="pl-6 font-normal"
             href="/payroll/timesheet"
           >
             <h3 className="text-md">Timesheet</h3>
           </MenuItem>
           <MenuItem
             active={str[2] == 'shifts' ? true : false}
-            className="pl-6 font-thin"
+            className="pl-6 font-normal"
             href="/payroll/shifts"
           >
             <h3 className="text-md">Shifts</h3>
@@ -80,7 +81,7 @@ const SidebarsPayroll = () => {
 
         <MenuItem
           active={str[2] == 'benefit' ? true : false}
-          className="mt-4 font-thin"
+          className="mt-4 font-normal"
           href="/payroll/benefit"
           icon={
             <Heart size={21} color={str[2] == 'benefit' ? 'white' : 'black'} />
@@ -91,7 +92,7 @@ const SidebarsPayroll = () => {
 
         <MenuItem
           active={str[2] == 'pto' ? true : false}
-          className="mt-4 font-thin"
+          className="mt-4 font-normal"
           href="/payroll/pto"
           icon={svgIcons.pto(str[2] == 'pto' ? 'white' : 'black')}
         >
@@ -99,7 +100,7 @@ const SidebarsPayroll = () => {
         </MenuItem>
         <MenuItem
           active={str[2] == 'reports' ? true : false}
-          className="mt-4 font-thin"
+          className="mt-4 font-normal"
           href="/payroll/reports"
           icon={svgIcons.piechart(str[2] == 'reports' ? 'white' : 'black')}
         >
@@ -117,7 +118,7 @@ const SidebarsPayroll = () => {
           />
           <div className="flex space-x-5">
             <img src="/icons/user.svg" className="h-10 w-10 -ml-2" alt="" />
-            <p className="mt-2 text-md ml-3 font-thin">Jamison</p>
+            <p className="mt-2 text-md ml-3 font-normal">Jamison</p>
           </div>
         </div>
       </div>

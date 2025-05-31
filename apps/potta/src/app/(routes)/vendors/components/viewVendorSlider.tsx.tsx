@@ -20,26 +20,41 @@ import useGetOneVendor from '../hooks/useGetOneVendor';
 import { PhoneFlag } from './table';
 interface VendorDetailsProps {
   vendorId: string;
+  open?: boolean; // Optional controlled open state
+  setOpen?: (open: boolean) => void; // Optional setter from parent
 }
-const ViewVendorSlider: React.FC<VendorDetailsProps> = ({ vendorId }) => {
+const ViewVendorSlider: React.FC<VendorDetailsProps> = ({
+  vendorId,
+  open: controlledOpen, // Renamed to avoid naming conflict
+  setOpen: setControlledOpen,
+}) => {
   const context = useContext(ContextData);
   const { data, isLoading, error, refetch } = useGetOneVendor(vendorId);
-  const [open, setOpen] = useState(false);
+
+  // Local state as fallback if no controlled state is provided
+  const [localOpen, setLocalOpen] = useState(false);
+
+  // Determine which open state to use
+  const isOpen = controlledOpen ?? localOpen;
+  const setIsOpen = setControlledOpen ?? setLocalOpen;
 
   useEffect(() => {
-    if (open && vendorId) {
+    if (isOpen && vendorId) {
       refetch();
     }
-  }, [open, vendorId, refetch]);
+  }, [vendorId, refetch, isOpen]);
   return (
     <Slider
-      onOpen={() => setOpen(true)}
+      open={isOpen} // Use controlled or local state
+      setOpen={setIsOpen} // Use controlled or local setter
       edit={false}
       title={'Vendor Details'}
       buttonText="view vendor"
     >
       {isLoading && (
-        <div className="flex justify-center items-center py-10">Loading</div>
+        <div className="flex justify-center items-center py-10 h-screen">
+          Loading
+        </div>
       )}
 
       {error && (
@@ -54,7 +69,7 @@ const ViewVendorSlider: React.FC<VendorDetailsProps> = ({ vendorId }) => {
         ))}
 
       {data && (
-        <div className="max-w-4xl mx-auto p-6 ">
+        <div className="relative h-screen w-full max-w-4xl">
           {/* Header */}
           <div className="w-full grid grid-cols-2 gap-3">
             <Text name="Name" value={data.name} height />
@@ -111,6 +126,16 @@ const ViewVendorSlider: React.FC<VendorDetailsProps> = ({ vendorId }) => {
             <Text name="Latitude" value={data.address.latitude} height />
             <Text name="Longitude" value={data.address.longitude} height />
           </div>
+
+          {/* <div className="text-center md:text-right mt-4 md:flex md:justify-end space-x-4">
+            <Button
+              text="Cancel"
+              type="button"
+              theme="gray"
+              color={true}
+              onClick={() => setIsSliderOpen(false)}
+            />
+          </div> */}
         </div>
       )}
     </Slider>

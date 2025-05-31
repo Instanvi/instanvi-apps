@@ -6,6 +6,7 @@ import { useContext, useState } from 'react';
 
 import ChatAI from '../../../app/chatai';
 import { ContextData } from '../../../components/context';
+import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,11 +23,14 @@ export default function RootLayout({
   const context = useContext(ContextData);
   return (
     <div className="relative flex  w-full h-screen">
-      <div
-        className={`transition-all flex  duration-1000  ease-in-out ${
-          show ? 'w-[82.5%]' : 'w-[97.5%]'
+      {/* <div
+        className={`transition-all flex  duration-500  ease-in-out ${
+          show ? 'w-[75%]' : 'w-[97.5%]'
         }`}
-      >
+      > */}
+      <div
+        className={`transition-all flex  duration-500  ease-in-out w-full`}
+      > 
         <div className="w-full overflow-x-hidden overflow-y-auto scroll z-10 flex">
           <div className="fixed z-50">
             <Sidebars />
@@ -36,17 +40,18 @@ export default function RootLayout({
               context?.toggle ? 'flex w-full  pl-[35px]' : 'pl-[150px] w-full '
             }`}
           >
-            <div className="mt-3 w-full relative  mx-0">
+            <div className=" w-full relative  mx-0">
               <Navbar />
+              <Toaster position="top-center" />
               {children}
             </div>
           </div>
         </div>
       </div>
-      <div className={`chat-ai    border-l ${show ? 'show-chat' : ''}`}>
+      {/* <div className={`chat-ai    border-l ${show ? 'show-chat' : ''}`}>
         <ChatAI />
-      </div>
-      <div className={` w-[2.5%] z-40 fixed right-0`}>
+      </div> */}
+      {/* <div className={` w-[2.5%] z-40 fixed right-0`}>
         <div className={`  bg-white  h-screen border-l flex justify-center`}>
           <div>
             <div className="">
@@ -95,7 +100,7 @@ export default function RootLayout({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

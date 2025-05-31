@@ -3,12 +3,15 @@ import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { usePathname } from 'next/navigation';
 import { ContextData } from '@potta/components/context';
 import Icon from '@potta/components/icon_fonts/icon';
+import { ChartPie, CircleDollarSign, Inbox, RefreshCw, Users } from 'lucide-react';
 const Sidebarsinvoicing = () => {
   const pathname = usePathname();
   const string = pathname;
   const str = string.split('/');
   const context = useContext(ContextData);
-
+  const isActive = (path: any) => {
+    return pathname.startsWith(path);
+  };
   return (
     <Sidebar
       collapsedWidth="65px"
@@ -20,23 +23,24 @@ const Sidebarsinvoicing = () => {
       className=" relative bg-blue-500  h-[100vh] z-30  side "
     >
       <Menu className="relative h-[76vh]" closeOnClick>
-        <MenuItem
+      <MenuItem
           className="mt-4 font-thin"
           href="/"
-          icon={<img src="/icons/Potta.svg" className="h-10 mt-2" alt="" />}
+          icon={<img src="/icons/Potta.svg" className="h-16 w-16 mt-2" alt="logo" />}
         >
           {' '}
+         
         </MenuItem>
         <MenuItem
-          active={str[1] == 'dashboard' ? true : false}
+          active={str[1] == 'invoice' && str[2] == undefined || str[2] == 'new' ? true : false}
           className="mt-8  font-thin"
-          href="/dashboard"
+          href="/invoice"
           icon={
             <Icon
-              icon="Pie-Chart-2"
+              icon="file-invoice-dollar"
               size={23}
               color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
+                str[1] == 'invoice' && str[2] == undefined || str[1] == undefined || str[1] == '' || str[2] == 'new'
                   ? 'white'
                   : 'black'
               }
@@ -44,80 +48,51 @@ const Sidebarsinvoicing = () => {
           }
         >
           {' '}
-          <h3 className="text-lg mt-[2px]">Overview</h3>{' '}
+          <h3 className="text-lg mt-[2px]">Invoice</h3>{' '}
         </MenuItem>
         <MenuItem
-          active={str[1] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/inbox"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
-          }
+          active={isActive('/invoice/estimates')}
+          className='mt-5'
+          href='/invoice/estimates'
+          icon={<CircleDollarSign className={`h-6 w-6 ${isActive('/invoice/estimates') ? 'text-white' : 'text-gray-900'}`} />}
         >
-          <h3 className="text-lg mt-1.5">Cancelled</h3>
+          <h3 className='text-lg mt-1.5'>Estimates</h3>
         </MenuItem>
         <MenuItem
-          active={str[1] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/inbox"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
-          }
+          active={isActive('/invoice/recurring')}
+          className='mt-5'
+          href='/invoice/recurring'
+          icon={<RefreshCw className={`h-6 w-6 ${isActive('/invoice/recurring') ? 'text-white' : 'text-gray-900'}`} />}
         >
-          <h3 className="text-lg mt-1.5">Failed</h3>
+          <h3 className='text-lg mt-1.5'>Reports</h3>
         </MenuItem>
         <MenuItem
-          active={str[1] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/inbox"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
-          }
+          active={isActive('/invoice/reports')}
+          className='mt-5'
+          href='/invoice/reports'
+          icon={<ChartPie className={`h-6 w-6 ${isActive('/invoice/reports') ? 'text-white' : 'text-gray-900'}`} />}
         >
-          <h3 className="text-lg mt-1.5">Terminals</h3>
+          <h3 className='text-lg mt-1.5'>Reports</h3>
         </MenuItem>
         <MenuItem
-          active={str[1] == 'inbox' ? true : false}
-          className="mt-4 font-thin"
-          href="/inbox"
-          icon={
-            <Icon
-              icon="Open-Mail"
-              size={21}
-              color={
-                str[1] == 'analytics' || str[1] == undefined || str[1] == ''
-                  ? 'white'
-                  : 'black'
-              }
-            />
-          }
+          active={isActive('/invoice/customers')}
+          className='mt-5'
+          href='/invoice/customers'
+          icon={<Users className={`h-6 w-6 ${isActive('/invoice/customers') ? 'text-white' : 'text-gray-900'}`} />}
         >
-          <h3 className="text-lg mt-1.5">Report</h3>
+          <h3 className='text-lg mt-1.5'>Customers</h3>
         </MenuItem>
+
+        {/* Inbox */}
+        <MenuItem
+          active={isActive('/invoice/inbox')}
+          className='mt-5'
+          href='/invoice/inbox'
+          icon={<Inbox className={`h-6 w-6 ${isActive('/invoice/inbox') ? 'text-white' : 'text-gray-900'}`} />}
+        >
+          <h3 className='text-lg mt-1.5'>Inbox</h3>
+        </MenuItem>
+        
       </Menu>
       <div className="absolute cursor-pointer mb-10 ml-6 bottom-0">
         <div className="flex-1 space-y-7 flex-col">

@@ -7,82 +7,117 @@ import {
   PopoverContent,
   Button,
 } from '@nextui-org/react';
-import { Filter } from '../_utils/types';
+import { Filter, Product } from '../_utils/types';
 import useGetAllProducts from '../_hooks/useGetAllProducts';
 import DeleteModal from './deleteModal';
 import CustomPopover from '@potta/components/popover';
+import EditProduct from './slides/components/update_product';
+import { UpdateProductPayload } from '../_utils/validation';
+import TableActionPopover, { PopoverAction } from '@potta/components/tableActionsPopover';
+import ViewProductSlider from './slides/components/viewProduct';
 const InventoryTable = () => {
+   const [openPopover, setOpenPopover] = useState<string | null>(null);
+    const [openViewModal, setOpenViewModal] = useState<string | null>(null);
+    const [openDeleteModal, setOpenDeleteModal] = useState<string | null>(null);
+    const [openUpdateModal, setOpenUpdateModal] = useState<string | null>(null);
+    const [isViewOpen, setIsViewOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+    const [productDetails, setproductDetails] =
+      useState<UpdateProductPayload | null>(null);
+
+  // Handle row click to view product details
+  const handleRowClick = (row: Product) => {
+    setOpenViewModal(row.uuid);
+    setIsViewOpen(true);
+  };
+
   const columns = [
     {
       name: 'Name',
-      selector: (row: any) => (
+      selector: (row: Product) => (
         <div className="flex items-center space-x-3">
-          <img src={row.img} alt="" width={60} />
+          <img src="https://static.nike.com/a/images/t_prod_ss/w_960,c_limit,f_auto/df31fd61-2df7-4c21-9326-94b45f799994/air-jordan-6-university-blue-ct8529-410-release-date.jpg" alt="" width={60} height={60} />
           <p className="mt-0.5">{row.name}</p>
         </div>
       ),
     },
     {
       name: 'Sku',
-      selector: (row: { sku: any }) => row.sku,
+      selector: (row: Product) => row.sku,
     },
     {
       name: 'Type',
-      selector: (row: { category: any }) => row.category,
+      selector: (row: Product) => row.category,
     },
     {
       name: 'Cost',
-      selector: (row: any) =>  <div>{row.vendor.currency} {row.cost}</div>,
+      selector: (row: Product) =>  <div> {row.cost}</div>,
     },
     {
       name: 'Sale Price',
-      selector: (row:  any) => <div>{row.vendor.currency} {row.salesPrice}</div>,
+      selector: (row: Product) => <div> {row.salesPrice}</div>,
     },
     {
       name: 'Inventory',
-      selector: (row: any) => <div>{row.inventoryLevels}</div>,
+      selector: (row: Product) => <div>{row.inventoryLevel}</div>,
     },
     {
       name: 'Reorder Point',
-      selector: (row: { points: any }) => <div className="">{row.points}</div>,
+      selector: (row: Product) => <div className="">355</div>,
     },
     {
-      name: 'Actions',
-      selector: (row: any) =>   <CustomPopover>
-      <div className="p-1 bg-white shadow-md flex  gap-2">
-        <div className="text-xs cursor-pointer hover:bg-gray-200 py-0.5 px-2 rounded-[2px]">
-          {/* <ViewVendorSlider vendorId={row.uuid} /> */}
-        </div>
-        <div className="text-xs cursor-pointer hover:bg-gray-200 py-0.5 px-2 rounded-[2px]">
-          {/* <EditVendor vendor={row} vendorId={row.uuid} /> */}
-        </div>
+      name: '',
+      selector: (row: any) => {
+        const actions: PopoverAction[] = [
+          {
+            label: 'View',
+            onClick: () => {
+              setOpenViewModal(row.uuid);
+              setIsViewOpen(true);
+            },
+            className: 'hover:bg-gray-200',
+            icon: <i className="ri-eye-line" />
+          },
+          {
+            label: 'Edit',
+            onClick: () => {
+              setOpenUpdateModal(row.uuid);
+              setproductDetails(row);
+              setIsEditOpen(true);
+            },
+            className: 'hover:bg-gray-200',
+            icon: <i className="ri-edit-line" />
+          },
+          {
+            label: 'Delete',
+            onClick: () => {
+              setOpenDeleteModal(row.uuid);
+              setIsDeleteOpen(true);
+            },
+            className: 'hover:bg-red-200 text-red-600',
+            icon: <i className="ri-delete-bin-line" />
+          }
+        ];
 
-        <div className="text-xs cursor-pointer hover:bg-red-200 py text-red-600 py-0.5 px-2 rounded-[2px]">
-          <DeleteModal productID={row.uuid} />
-        </div>
-      </div>
-    </CustomPopover>,
+        return (
+          <TableActionPopover
+            actions={actions}
+            rowUuid={row.uuid}
+            openPopover={openPopover}
+            setOpenPopover={setOpenPopover}
+          />
+        );
+      },
     },
   ];
-  const data = [
-    {
-      id: 'Inv 001',
-      name: 'Black Shoes Nike',
-      img: '/icons/shoes.svg',
-      sku: '194E175W',
-      type: 'Inventory',
-      cost: 'Xaf 350,000',
-      salePrice: 'Xaf 450,000',
-      inventory: '245',
-      points: '23 ',
-    },
-  ];
+
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
   const filter: Filter = { page, limit };
   const {
-    data: products,
+    data,
     isLoading,
     error,
     refetch,
@@ -93,23 +128,48 @@ const InventoryTable = () => {
   const handlePerRowsChange = (newLimit: number, newPage: number) => {
     setLimit(newLimit);
     setPage(newPage); // Reset page when changing rows per page
-    
   };
   return (
     <div className="mt-10">
       <div></div>
       <Table
+        minHeight='70vh'
+        maxHeight='70vh'
         columns={columns}
-        data={products?.data || []}
+        data={data?.data || []}
         ExpandableComponent={null}
         expanded
         pagination
         pending={isLoading}
         paginationServer
-        paginationTotalRows={products?.meta?.totalItems ?? 0}
+        paginationTotalRows={data?.meta?.totalItems ?? 0}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}
+        onRowClicked={handleRowClick}
+        pointerOnHover={true}
       />
+      {openDeleteModal && (
+        <DeleteModal
+          productID={openDeleteModal}
+          open={isDeleteOpen}
+          setOpen={setIsDeleteOpen}
+        />
+      )}
+      {openUpdateModal && (
+        <EditProduct
+          product={productDetails}
+          productId={openUpdateModal}
+          open={isEditOpen}
+          setOpen={setIsEditOpen}
+        />
+      )}
+      {openViewModal && (
+        <ViewProductSlider
+          productId={openViewModal}
+          open={isViewOpen}
+          setOpen={setIsViewOpen}
+        />
+      )}
     </div>
   );
 };

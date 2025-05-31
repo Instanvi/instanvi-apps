@@ -16206,6 +16206,11 @@
       },
       {
         "source": "potta",
+        "target": "npm:uuid@8.3.2",
+        "type": "static"
+      },
+      {
+        "source": "potta",
         "target": "npm:uuid",
         "type": "static"
       },
@@ -43047,5 +43052,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1742163227211
+  "computedAt": 1748672850825
 }

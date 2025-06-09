@@ -1,40 +1,27 @@
 'use client';
-import React, { useContext, useEffect, useState } from 'react';
-import Input from '@potta/components/input';
-
+import React from 'react';
 import Slider from '@potta/components/slideover';
-import { SingleValue } from 'react-select';
-import Select from '@potta/components/select';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import Button from '@potta/components/button';
-import Address from './address';
-import { ContextData } from '@potta/components/context';
-import { CustomerPayload, customerSchema } from '../utils/validations';
-import Notes from './note';
-import Tax from './tax';
-import useCreateCustomer from '../hooks/useCreateCustomer';
-import toast from 'react-hot-toast';
 import Text from '@potta/components/textDisplay';
 import useGetOneCustomer from '../hooks/useGetOneCustomer';
+
 import { PhoneFlag } from './table';
+import { useContext, useEffect, useState } from 'react';
+import { ContextData } from '@potta/components/context';
+
 interface CustomerDetailsProps {
+  open?: boolean;
   customerId: string;
-  open?: boolean; // Optional controlled open state
-  setOpen?: (open: boolean) => void; // Optional setter from parent
+  setOpen?: (open: boolean) => void;
 }
 const ViewCustomerSlider: React.FC<CustomerDetailsProps> = ({
   customerId,
-  open: controlledOpen, // Renamed to avoid naming conflict
+  open: controlledOpen,
   setOpen: setControlledOpen,
 }) => {
-  const context = useContext(ContextData);
-  const { data, isLoading, error, refetch } = useGetOneCustomer(customerId);
-
-  // Local state as fallback if no controlled state is provided
   const [localOpen, setLocalOpen] = useState(false);
 
-  // Determine which open state to use
+  const { data, isLoading, error, refetch } = useGetOneCustomer(customerId);
+
   const isOpen = controlledOpen ?? localOpen;
   const setIsOpen = setControlledOpen ?? setLocalOpen;
 
@@ -45,9 +32,9 @@ const ViewCustomerSlider: React.FC<CustomerDetailsProps> = ({
   }, [customerId, refetch, isOpen]);
   return (
     <Slider
-      open={isOpen} // Use controlled or local state
-      setOpen={setIsOpen} // Use controlled or local setter
       edit={false}
+      open={isOpen}
+      setOpen={setIsOpen}
       title={'Vendor Details'}
       buttonText="view vendor"
     >
@@ -65,14 +52,20 @@ const ViewCustomerSlider: React.FC<CustomerDetailsProps> = ({
 
       {!data ||
         (Object.keys(data).length === 0 && (
-          <p className="text-gray-500 text-center">No customer data available.</p>
+          <p className="text-gray-500 text-center">
+            No customer data available.
+          </p>
         ))}
 
       {data && (
         <div className="relative h-screen w-full max-w-4xl">
           {/* Header */}
           <div className="w-full grid grid-cols-2 gap-3">
-            <Text name="Name" value={`${data.firstName} ${data.lastName}`} height />
+            <Text
+              name="Name"
+              value={`${data.firstName} ${data.lastName}`}
+              height
+            />
             <Text name="Type" value={data.type} height />
           </div>
           <div className="w-full grid grid-cols-2 gap-3">
@@ -96,7 +89,7 @@ const ViewCustomerSlider: React.FC<CustomerDetailsProps> = ({
           <div className="w-full grid grid-cols-2 gap-3">
             <Text name="Created At" value={data.createdAt} height />
           </div>
-          <hr className='my-8'/>
+          <hr className="my-8" />
 
           <div className="w-full grid grid-cols-2 gap-3">
             <Text name="Address" value={data.address.address} height />
@@ -113,16 +106,6 @@ const ViewCustomerSlider: React.FC<CustomerDetailsProps> = ({
             <Text name="Latitude" value={data.address.latitude} height />
             <Text name="Longitude" value={data.address.longitude} height />
           </div>
-
-          {/* <div className="text-center md:text-right mt-4 md:flex md:justify-end space-x-4">
-            <Button
-              text="Cancel"
-              type="button"
-              theme="gray"
-              color={true}
-              onClick={() => setIsSliderOpen(false)}
-            />
-          </div> */}
         </div>
       )}
     </Slider>

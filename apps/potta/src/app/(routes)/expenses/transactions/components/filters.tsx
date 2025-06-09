@@ -28,7 +28,7 @@ const Filter = () => {
             <p className="text-[17px] -mt-1">Filter&nbsp;: </p>
             <div className="-mt-3">
               <Select
-              outline
+                outline
                 border={true}
                 options={[
                   { label: 'All', value: 'all' },
@@ -45,7 +45,7 @@ const Filter = () => {
             <p className="text-[17px] -mt-1">Date&nbsp;: </p>
             <div className="-mt-3">
               <Select
-              outline
+                outline
                 border={true}
                 options={[
                   { label: 'All Time', value: 'All Time' },
@@ -71,14 +71,14 @@ const Filter = () => {
             />
           </div>
           <div className="">
-          <Link className='flex justify-end' href={'/pos/sales/new'}>
-                <Button
-                  text={'Make Payment'}
-                  icon={<i className="ri-file-add-line"></i>}
-                  theme="default"
-                  type={'button'}
-                />
-              </Link>
+            <Link className="flex justify-end" href={'/pos/sales/new'}>
+              <Button
+                text={'Make Payment'}
+                icon={<i className="ri-file-add-line"></i>}
+                theme="default"
+                type={'button'}
+              />
+            </Link>
           </div>
         </div>
       </div>

@@ -1,12 +1,11 @@
 'use client';
 import Button from '@potta/components/button';
-import Search from '@potta/components/search';
-import Select from '@potta/components/select';
-import React, { useState } from 'react';
-import SliderCustomer from './customerSlider';
-import { PopoverAction } from '@potta/components/tableActionsPopover';
 import { NextPopover } from '@potta/components/popover';
+import Search from '@potta/components/search';
+import { PopoverAction } from '@potta/components/tableActionsPopover';
+import { useState } from 'react';
 import BulkSlider from './bulkSlider';
+import SliderCustomer from './customerSlider';
 
 const Filter = () => {
   const [selectedValue, setSelectedValue] = useState('All Time'); // Set your default value here
@@ -83,11 +82,11 @@ const Filter = () => {
         <div className="flex justify-end">
           <div className="w-fit justify-end flex">
             <Button
-              type={'button'}
-              text="Export"
               color
-              icon={<img src="/images/export.svg" />}
+              text="Export"
+              type={'button'}
               theme="lightBlue"
+              icon={<img src="/images/export.svg" />}
             />
           </div>
           <div className="w-fit ml-2">
@@ -98,8 +97,8 @@ const Filter = () => {
               setOpenPopover={setOpenPopover}
               triggerButton={
                 <Button
-                  text={'New Customer'}
                   type={'button'}
+                  text={'New Customer'}
                   icon={<i className="ri-file-add-line"></i>}
                 />
               }

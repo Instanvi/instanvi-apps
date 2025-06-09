@@ -1,104 +1,101 @@
 'use client';
-import React, { useContext, useEffect, useState } from 'react';
-import Input from '@potta/components/input';
-import Slider from '@potta/components/slideover';
-import Select from '@potta/components/select';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import Button from '@potta/components/button';
+import Tax from './tax';
+import React from 'react';
 import Address from './address';
+import Input from '@potta/components/input';
+import toast from 'react-hot-toast';
+import Button from '@potta/components/button';
+import Select from '@potta/components/select';
+import Slider from '@potta/components/slideover';
+import useUpdateCustomer from '../hooks/useUpdateCustomer';
+
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { ContextData } from '@potta/components/context';
+import { useContext, useEffect, useState } from 'react';
+import { PhoneInput } from '@potta/components/phoneInput';
 import {
   UpdateCustomerPayload,
   updateCustomerSchema,
-  customerSchema,
 } from '../utils/validations';
-import Notes from './note';
-import Tax from './tax';
-import useUpdateCustomer from '../hooks/useUpdateCustomer';
-import toast from 'react-hot-toast';
-import { PhoneInput } from '@potta/components/phoneInput';
 
 interface EditCustomerProps {
-  customer: UpdateCustomerPayload | null; // Existing vendor data
-  customerId: string; // ID of the vendor to be edited
-  open?: boolean; // Optional controlled open state
-  setOpen?: (open: boolean) => void; // Optional setter from parent
+  open?: boolean;
+  customerId: string;
+  setOpen?: (open: boolean) => void;
+  customer: UpdateCustomerPayload | null;
 }
 
-// Define the PhoneMetadata interface to match what our PhoneInput component provides
 interface PhoneMetadata {
-  formattedValue: string;
-  countryCode: string;
   rawInput: string;
+  countryCode: string;
+  formattedValue: string;
 }
 
 const EditVendor: React.FC<EditCustomerProps> = ({
   customer,
   customerId,
-  open: controlledOpen, // Renamed to avoid naming conflict
+  open: controlledOpen,
   setOpen: setControlledOpen,
 }) => {
-  // Local state as fallback if no controlled state is provided
   const [localOpen, setLocalOpen] = useState(false);
-
-  // Determine which open state to use
-  const isOpen = controlledOpen ?? localOpen;
-  const setIsOpen = setControlledOpen ?? setLocalOpen;
   const [tabs, setTabs] = useState<string>('Address');
-  const context = useContext(ContextData);
-
-  // Track phone metadata separately to maintain all parts of the phone number
   const [phoneMetadata, setPhoneMetadata] = useState<PhoneMetadata>({
     formattedValue: '',
     countryCode: '+237', // Default to Cameroon
-    rawInput: ''
+    rawInput: '',
   });
 
+  const isOpen = controlledOpen ?? localOpen;
+  const setIsOpen = setControlledOpen ?? setLocalOpen;
+
+  // Track phone metadata separately to maintain all parts of the phone number
+
   const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
     reset,
+    control,
+    register,
     setValue,
-    watch,
+    handleSubmit,
+    formState: { errors },
   } = useForm<UpdateCustomerPayload>({
     resolver: yupResolver(updateCustomerSchema),
     defaultValues: customer || {
-      firstName: '',
-      lastName: '',
-      type: undefined,
-      contactPerson: '',
       email: '',
       phone: '',
+      lastName: '',
+      firstName: '',
+      type: undefined,
+      contactPerson: '',
       address: {
         address: '',
         city: '',
         state: '',
-        country: '',
-        postalCode: '',
         latitude: 0,
+        country: '',
         longitude: 0,
+        postalCode: '',
       },
       taxId: '',
+      creditLimit: 0,
       gender: undefined,
       status: undefined,
-      creditLimit: 0
     },
   });
 
   // Extract country code and phone number from the full phone number
-  const extractPhoneComponents = (fullPhoneNumber: string): { countryCode: string; phoneNumber: string } => {
+  const extractPhoneComponents = (
+    fullPhoneNumber: string
+  ): { countryCode: string; phoneNumber: string } => {
     // Common country code patterns
     const countryCodePatterns = [
       /^\+(\d{1,4})/, // Format: +XXX
       /^00(\d{1,4})/, // Format: 00XXX
     ];
-    
+
     let countryCode = '+237'; // Default
     let phoneNumber = fullPhoneNumber;
-    
+
     // Try to extract country code using the patterns
     for (const pattern of countryCodePatterns) {
       const match = fullPhoneNumber.match(pattern);
@@ -114,10 +111,10 @@ const EditVendor: React.FC<EditCustomerProps> = ({
         break;
       }
     }
-    
+
     return {
       countryCode,
-      phoneNumber: phoneNumber.trim() // Remove any leading/trailing spaces
+      phoneNumber: phoneNumber.trim(), // Remove any leading/trailing spaces
     };
   };
 
@@ -128,20 +125,22 @@ const EditVendor: React.FC<EditCustomerProps> = ({
 
       // Extract country code and phone number
       if (customer.phone) {
-        const { countryCode, phoneNumber } = extractPhoneComponents(customer.phone);
-        
+        const { countryCode, phoneNumber } = extractPhoneComponents(
+          customer.phone
+        );
+
         // Set the phone metadata with separated components
         setPhoneMetadata({
           formattedValue: customer.phone,
           countryCode: countryCode,
-          rawInput: phoneNumber // Just the number without country code
+          rawInput: phoneNumber, // Just the number without country code
         });
-        
+
         // For debugging
         console.log('Phone components extracted:', {
           original: customer.phone,
           countryCode,
-          phoneNumber
+          phoneNumber,
         });
       }
     }
@@ -169,17 +168,20 @@ const EditVendor: React.FC<EditCustomerProps> = ({
   ];
 
   // Handle phone number changes with the new API
-  const handlePhoneChange = (combinedValue: string, metadata: PhoneMetadata) => {
+  const handlePhoneChange = (
+    combinedValue: string,
+    metadata: PhoneMetadata
+  ) => {
     // Store the complete metadata for future reference
     setPhoneMetadata(metadata);
 
     // Set the combined value (country code + phone number) to the form
     setValue('phone', combinedValue);
-    
+
     // For debugging
     console.log('Phone changed:', {
       combinedValue,
-      metadata
+      metadata,
     });
   };
 
@@ -336,7 +338,9 @@ const EditVendor: React.FC<EditCustomerProps> = ({
                       countryCode={phoneMetadata.countryCode} // Country code passed separately
                     />
                     {errors.phone && (
-                      <small className="text-red-500">{errors.phone.message}</small>
+                      <small className="text-red-500">
+                        {errors.phone.message}
+                      </small>
                     )}
                   </>
                 )}
@@ -385,19 +389,19 @@ const EditVendor: React.FC<EditCustomerProps> = ({
         </div>
         <div className="flex-grow" /> {/* This div takes up remaining space */}
         <div className="text-center md:text-right  md:flex  space-x-4 fixed bottom-0 left-0 right-0 justify-center bg-white p-4">
-        <div className="flex gap-2 w-full max-w-4xl justify-between">
-          <Button
-            text="Cancel"
-            type="button"
-            theme="danger"
-            onClick={() => setIsOpen(false)}
-          />
-          <Button
-            isLoading={mutation.isPending}
-            text="Update Customer"
-            type="submit"
-          />
-        </div>
+          <div className="flex gap-2 w-full max-w-4xl justify-between">
+            <Button
+              text="Cancel"
+              type="button"
+              theme="danger"
+              onClick={() => setIsOpen(false)}
+            />
+            <Button
+              isLoading={mutation.isPending}
+              text="Update Customer"
+              type="submit"
+            />
+          </div>
         </div>
       </form>
     </Slider>

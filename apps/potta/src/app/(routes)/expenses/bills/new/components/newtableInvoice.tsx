@@ -1,13 +1,14 @@
 import { useContext, useState } from 'react';
 import { ContextData } from '@potta/components/context';
 import SearchSelect, { Option } from '@potta/components/search-select'; // Import Option type
-import useGetAllProducts from '../../../inventory/_hooks/useGetAllProducts';
+import useGetAllProducts from '@potta/app/(routes)/pos/inventory/_hooks/useGetAllProducts';
+// import useGetAllProducts from '../../../inventory/_hooks/useGetAllProducts';
 
 interface Product {
+  tax: number;
   uuid: string;
   name: string;
   price: number;
-  tax: number;
   productId: string;
 }
 
@@ -40,8 +41,8 @@ export default function DynamicTable() {
     null
   );
   const [qty, setQty] = useState(1);
-  const [price, setPrice] = useState(0);
   const [tax, setTax] = useState(0);
+  const [price, setPrice] = useState(0);
 
   // Get currency from context
   const currency = context?.data?.currency || 'USD';
@@ -75,12 +76,12 @@ export default function DynamicTable() {
       if (selectedProd) {
         const productOption: ProductOption = {
           label: value.label,
-          value: value.value as string,
           product: selectedProd,
+          value: value.value as string,
         };
-        setSelectedProduct(productOption);
-        setPrice(selectedProd.price);
         setTax(selectedProd.tax);
+        setPrice(selectedProd.price);
+        setSelectedProduct(productOption);
       }
     } else {
       setSelectedProduct(null);

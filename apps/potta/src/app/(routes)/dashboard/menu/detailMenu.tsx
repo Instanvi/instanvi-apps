@@ -13,10 +13,10 @@ import Link from 'next/link';
 import { ContextData } from '@potta/components/context';
 
 interface DetailMenuProps {
+  id: string;
+  title: string;
+  backLink: string;
   children: ReactNode;
-  id: string; // Required prop
-  title: string; // Required prop
-  backLink: string; // Required prop
 }
 
 const DetailMenu: FC<DetailMenuProps> = ({ children, id, title, backLink }) => {
@@ -42,8 +42,8 @@ const DetailMenu: FC<DetailMenuProps> = ({ children, id, title, backLink }) => {
       >
         <button
           type="button"
-          className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
           onClick={() => context?.setSidebarOpen(true)}
+          className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
         >
           <span className="sr-only">Open sidebar</span>
           <i className="ri-menu-line text-xl"></i>
@@ -82,12 +82,12 @@ const DetailMenu: FC<DetailMenuProps> = ({ children, id, title, backLink }) => {
               </Menu.Button>
               <Transition
                 as={Fragment}
+                leaveTo="transform opacity-0 scale-95"
+                leave="transition ease-in duration-75"
                 enter="transition ease-out duration-100"
                 enterFrom="transform opacity-0 scale-95"
                 enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
                 leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
               >
                 <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                   <Menu.Item>

@@ -1,58 +1,56 @@
 'use client';
-import React, { useContext, useState, useEffect } from 'react';
-import Input from '@potta/components/input';
-import Slider from '@potta/components/slideover';
-import { SingleValue } from 'react-select';
-import Select from '@potta/components/select';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import Button from '@potta/components/button';
-import Address from './address';
-import { ContextData } from '@potta/components/context';
-import { CustomerPayload, customerSchema } from '../utils/validations';
-import Notes from './note';
 import Tax from './tax';
-import useCreateCustomer from '../hooks/useCreateCustomer';
+import React from 'react';
+import Address from './address';
 import toast from 'react-hot-toast';
+import Button from '@potta/components/button';
+import Input from '@potta/components/input';
+import Select from '@potta/components/select';
+import Slider from '@potta/components/slideover';
+import useCreateCustomer from '../hooks/useCreateCustomer';
+
+import { format } from 'date-fns';
+import { cn } from '@potta/lib/utils';
+import { CalendarIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { PhoneInput } from '@potta/components/phoneInput';
+import { Button as ShadcnButton } from '@potta/components/shadcn/button';
+import { Calendar } from '@potta/components/shadcn/calendar';
+import { CustomerPayload, customerSchema } from '../utils/validations';
 // Import shadcn date picker components
-import { Calendar } from "@potta/components/shadcn/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@potta/components/shadcn/popover";
-import { Button as ShadcnButton } from "@potta/components/shadcn/button";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@potta/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@potta/components/shadcn/popover';
 
 interface CustomerCreateProps {
-  open?: boolean; // Optional controlled open state
-  setOpen?: (open: boolean) => void; // Optional setter from parent
+  open?: boolean;
+  setOpen?: (open: boolean) => void;
 }
 
-// Define the PhoneMetadata interface to match what our PhoneInput component provides
 interface PhoneMetadata {
-  formattedValue: string;
-  countryCode: string;
   rawInput: string;
+  countryCode: string;
+  formattedValue: string;
 }
 
 const SliderCustomer: React.FC<CustomerCreateProps> = ({
-  open: controlledOpen, // Renamed to avoid naming conflict
+  open: controlledOpen,
   setOpen: setControlledOpen,
 }) => {
-  const [tabs, setTabs] = useState<string>('Address');
-  // Local state as fallback if no controlled state is provided
   const [localOpen, setLocalOpen] = useState(false);
-  // Track phone metadata separately to maintain all parts of the phone number
+  const [tabs, setTabs] = useState<string>('Address');
   const [phoneMetadata, setPhoneMetadata] = useState<PhoneMetadata>({
+    rawInput: '',
     formattedValue: '',
-    countryCode: '+237', // Default to Cameroon
-    rawInput: ''
+    countryCode: '+237',
   });
 
-  // Determine which open state to use
   const isOpen = controlledOpen ?? localOpen;
   const setIsOpen = setControlledOpen ?? setLocalOpen;
-  const context = useContext(ContextData);
   const {
     register,
     handleSubmit,
@@ -64,22 +62,22 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
   } = useForm<CustomerPayload>({
     resolver: yupResolver(customerSchema),
     defaultValues: {
-      firstName: '',
+      taxId: '',
+      phone: '',
+      email: '',
       lastName: '',
+      firstName: '',
       type: undefined,
       contactPerson: '',
-      email: '',
-      phone: '',
       address: {
-        address: '',
         city: '',
         state: '',
+        address: '',
         country: '',
-        postalCode: '',
         latitude: 0,
         longitude: 0,
+        postalCode: '',
       },
-      taxId: '',
       creditLimit: 0,
       gender: undefined,
       date_of_birth: undefined, // Add default value for dateOfBirth
@@ -113,7 +111,10 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
   };
 
   // Handle phone number changes with the new API
-  const handlePhoneChange = (combinedValue: string, metadata: PhoneMetadata) => {
+  const handlePhoneChange = (
+    combinedValue: string,
+    metadata: PhoneMetadata
+  ) => {
     // Store the complete metadata for future reference
     setPhoneMetadata(metadata);
 
@@ -128,7 +129,7 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
       setPhoneMetadata({
         formattedValue: '',
         countryCode: '+237',
-        rawInput: ''
+        rawInput: '',
       });
     }
   }, [isOpen, reset]);
@@ -233,7 +234,6 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
             )}
           </div>
         </div>
-        
         {/* Date of Birth Field */}
         <div className="w-full mb-5">
           <div>
@@ -249,31 +249,36 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
                     <ShadcnButton
                       variant="outline"
                       className={cn(
-                        "w-1/2 py-5  justify-start text-left font-normal",
-                        !field.value && "text-muted-foreground"
+                        'w-1/2 py-5  justify-start text-left font-normal',
+                        !field.value && 'text-muted-foreground'
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                      {field.value ? (
+                        format(field.value, 'PPP')
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
                     </ShadcnButton>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0">
                     <Calendar
+                      initialFocus
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
-                      initialFocus
                     />
                   </PopoverContent>
                 </Popover>
               )}
             />
             {errors.date_of_birth && (
-              <small className="text-red-500">{errors.date_of_birth.message}</small>
+              <small className="text-red-500">
+                {errors.date_of_birth.message}
+              </small>
             )}
           </div>
         </div>
-        
         <hr />
         <div className="mt-2">
           <h1 className="text-xl">Contact Information </h1>
@@ -286,15 +291,17 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
                 render={({ field }) => (
                   <>
                     <PhoneInput
+                      whatsapp={false}
                       label="Phone Number"
+                      onChange={handlePhoneChange}
                       placeholder="Enter phone number"
                       value={phoneMetadata.formattedValue} // Use the formatted value from metadata
-                      onChange={handlePhoneChange}
-                      whatsapp={false}
                       countryCode={phoneMetadata.countryCode} // Use the country code from metadata
                     />
                     {errors.phone && (
-                      <small className="text-red-500">{errors.phone.message}</small>
+                      <small className="text-red-500">
+                        {errors.phone.message}
+                      </small>
                     )}
                   </>
                 )}
@@ -303,11 +310,11 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
             <div>
               <Input
                 type={'text'}
-                label={'Email'}
                 name={'email'}
-                placeholder="abcdfg@abc.com"
+                label={'Email'}
                 register={register}
                 errors={errors.email}
+                placeholder="abcdfg@abc.com"
               />
             </div>
           </div>
@@ -351,8 +358,8 @@ const SliderCustomer: React.FC<CustomerCreateProps> = ({
               onClick={() => setIsOpen(false)}
             />
             <Button
-              text={'Add Customer'}
               type={'submit'}
+              text={'Add Customer'}
               isLoading={mutation.isPending}
             />
           </div>

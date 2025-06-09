@@ -24,9 +24,8 @@ import {
   BankAccountPayload,
   FilterParams,
 } from './utils/types';
-import CustomLoader from '@potta/components/loader';
-import PottaLoader from '@potta/components/pottaloader';
 import Search from '@potta/components/search';
+import CustomLoader from '@potta/components/loader';
 
 // Define employee type for table
 interface Employee {
@@ -45,7 +44,7 @@ interface Employee {
 const People = () => {
   const [active, setActive] = useState('ebi');
   const [isLoading, setIsLoading] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState(true); // Start with true to show loading state initially
   const [personId, setPersonId] = useState<string | null>(null);
   const [personData, setPersonData] = useState<any>(null);
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -54,6 +53,8 @@ const People = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [viewMode, setViewMode] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   // State for form data
   const [baseInfo, setBaseInfo] = useState<BaseInfoPayload | null>(null);
@@ -121,7 +122,7 @@ const People = () => {
               Active
             </span>
           ) : (
-            <span className="px-2 inline-flex text-md leading-5 font-semibold rounded-full  text-red-800">
+            <span className="px-2 inline-flex text-md leading-5 font-semibold rounded-full text-red-800">
               Inactive
             </span>
           )}
@@ -140,24 +141,196 @@ const People = () => {
       cell: (row: Employee) => (
         <div className="flex space-x-3">
           <button
+            className="text-blue-600 hover:text-blue-900"
+            onClick={() => {
+              handleEmployeeAction(row.uuid, true);
+            }}
+            title="View Employee"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+          </button>
+          <button
             className="text-indigo-600 hover:text-indigo-900"
             onClick={() => {
-              setPersonId(row.uuid);
-              handleOpenModal();
+              handleEmployeeAction(row.uuid, false);
             }}
+            title="Edit Employee"
           >
-            Edit
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+              />
+            </svg>
           </button>
           <button
             className="text-red-600 hover:text-red-900"
             onClick={() => handleDeleteEmployee(row.uuid)}
+            title="Delete Employee"
           >
-            Delete
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
           </button>
         </div>
       ),
     },
   ];
+
+  // Handle employee action (view or edit)
+  const handleEmployeeAction = async (id: string, isViewMode: boolean) => {
+    // Clear any previous data
+    clearFormData();
+
+    // Set the person ID and view mode
+    setPersonId(id);
+    setViewMode(isViewMode);
+
+    // Reset to first tab
+    setActive('ebi');
+
+    // Open the modal
+    setModalAnimation('animate-slide-in-top');
+    setShowModal(true);
+
+    // Fetch the employee data
+    setIsFetching(true);
+    setDataLoaded(false);
+
+    try {
+      const data = await peopleApi.getPerson(id);
+      setPersonData(data);
+
+      // Populate form data
+      populateFormData(data);
+      setDataLoaded(true);
+    } catch (error) {
+      console.error('Error fetching employee data:', error);
+      toast.error('Failed to load employee data');
+      closeModalWithoutConfirmation();
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  // Populate all form data from employee data
+  const populateFormData = (data: any) => {
+    if (!data) return;
+
+    // Base info
+    const newBaseInfo = {
+      firstName: data.firstName || '',
+      lastName: data.lastName || '',
+      email: data.email || '',
+      phoneNumber: data.phone || '',
+      gender: data.gender
+        ? data.gender.charAt(0).toUpperCase() + data.gender.slice(1)
+        : 'Male',
+      birthday: data.date_of_birth || '',
+      employmentType: data.employment_type || 'Employee',
+      employmentDate: data.start_date || '',
+      maritalStatus: data.marital_status || 'Single',
+      taxPayerNumber: data.tax_payer_number || '',
+      nationalId: data.national_identification_number || '',
+      employeeId: data.uuid || '',
+      jobTitle: data.jobTitle || '',
+      roleId: data.role_id || '',
+      matricule: data.matricule || '',
+    };
+    setBaseInfo(newBaseInfo);
+
+    // Address
+    if (data.address) {
+      const newAddress = {
+        address: data.address.address || '',
+        city: data.address.city || '',
+        state: data.address.state || '',
+        country: data.address.country || '',
+        postalCode: data.address.postalCode || '',
+        latitude: data.address.latitude || 0,
+        longitude: data.address.longitude || 0,
+      };
+      setAddress(newAddress);
+    }
+
+    // Compensation
+    const newCompensation = {
+      personId: data.uuid,
+      hourlyRate: data.hourly_rate || 0,
+      salary: data.base_pay || 0,
+      paymentFrequency: data.compensation_schedule || 'Monthly',
+      eligibleForTips: data.eligible_for_tips || false,
+      eligibleForOvertime: data.eligible_for_overtime || false,
+      paid_time_off: data.paidTimeOff || [],
+    };
+    setCompensation(newCompensation);
+
+    // Schedule
+    const newSchedule = {
+      personId: data.uuid,
+      payScheduleId: data.pay_schedule?.uuid || '',
+      payCycleName: data.compensation_schedule || '',
+      firstPayDate: data.pay_schedule?.first_pay_date || '',
+      endPayDate: data.pay_schedule?.end_date || '',
+    };
+    setSchedule(newSchedule);
+
+    // Bank account will be fetched separately when needed
+
+    // Increment key to force re-render of components with new data
+    setFormKey((prev) => prev + 1);
+  };
+
+  // Clear form data
+  const clearFormData = () => {
+    setBaseInfo(null);
+    setAddress(null);
+    setBankAccount(null);
+    setCompensation(null);
+    setSchedule(null);
+    setBenefit(null);
+    setTaxInfo(null);
+    setPersonData(null);
+    setDataLoaded(false);
+  };
 
   // Fetch all employees on initial load
   useEffect(() => {
@@ -273,180 +446,91 @@ const People = () => {
 
   // Fetch person data whenever personId changes or when navigating back to previous steps
   useEffect(() => {
-    if (personId) {
-      fetchPersonData();
+    if (personId && active === 'ba') {
+      fetchBankAccountData();
     }
   }, [personId, active]);
-  const fetchPersonData = async () => {
+
+  // Fetch bank account data
+  const fetchBankAccountData = async () => {
     if (!personId) return;
 
-    setIsFetching(true);
     try {
-      const data = await peopleApi.getPerson(personId);
-      setPersonData(data);
-      console.log('Fetched person data:', data);
+      console.log('Fetching bank accounts for person:', personId);
+      const bankAccountsResponse = await peopleApi.getBankAccounts(personId);
+      console.log('Fetched bank accounts:', bankAccountsResponse);
 
-      // Update form data based on fetched data
-      if (data) {
-        // Update base info
-        if (active === 'ebi' || active === 'el') {
-          const newBaseInfo = {
-            firstName: data.firstName || '',
-            lastName: data.lastName || '',
-            email: data.email || '',
-            phoneNumber: data.phone || '',
-            gender: data.gender
-              ? data.gender.charAt(0).toUpperCase() + data.gender.slice(1)
-              : 'Male',
-            birthday: data.date_of_birth || '',
-            employmentType: data.employment_type || 'Employee',
-            employmentDate: data.start_date || '',
-            maritalStatus: data.marital_status || 'Single',
-            taxPayerNumber: data.tax_payer_number || '',
-            nationalId: data.national_identification_number || '',
-            employeeId: data.uuid || '', // Use uuid as employeeId
-            jobTitle: data.jobTitle || '',
-            roleId: data.role_id || '', // Map role_id from API to roleId in form
-          };
-          console.log('Setting baseInfo to:', newBaseInfo);
-          setBaseInfo(newBaseInfo);
-        }
+      // Check if the response has a data property (pagination structure)
+      const bankAccounts = bankAccountsResponse.data || bankAccountsResponse;
 
-        // Update address info if we're on the address step
-        if (active === 'el' && data.address) {
-          const newAddress = {
-            address: data.address.address || '',
-            city: data.address.city || '',
-            state: data.address.state || '',
-            country: data.address.country || '',
-            postalCode: data.address.postalCode || '',
-            latitude: data.address.latitude || 0,
-            longitude: data.address.longitude || 0,
-          };
-          setAddress(newAddress);
-        }
+      if (
+        bankAccounts &&
+        Array.isArray(bankAccounts) &&
+        bankAccounts.length > 0
+      ) {
+        // Find the primary account or use the first one
+        const primaryAccount =
+          bankAccounts.find((acc: any) => acc.is_primary) || bankAccounts[0];
 
-        // Update bank account info if we're on the bank account step
-        // Update bank account info if we're on the bank account step
-        if (active === 'ba') {
-          try {
-            console.log('Fetching bank accounts for person:', personId);
-            // Fetch bank accounts for the person
-            const bankAccountsResponse = await peopleApi.getBankAccounts(
-              personId
-            );
-            console.log('Fetched bank accounts:', bankAccountsResponse);
+        const newBankAccount = {
+          person_id: personId,
+          account_holder_name:
+            primaryAccount.account_holder_name ||
+            (personData
+              ? `${personData.firstName} ${personData.lastName}`
+              : ''),
+          bank_name: primaryAccount.bank_name || '',
+          account_number: primaryAccount.account_number || '',
+          routing_number: primaryAccount.routing_number || '',
+          currency: primaryAccount.currency || 'USD',
+          account_type: primaryAccount.account_type || 'Checking',
+          is_primary: primaryAccount.is_primary || true,
+          country:
+            primaryAccount.country || personData?.address?.country || 'US',
+          verified: primaryAccount.verified || false,
+        };
 
-            // Check if the response has a data property (pagination structure)
-            const bankAccounts =
-              bankAccountsResponse.data || bankAccountsResponse;
-
-            if (
-              bankAccounts &&
-              Array.isArray(bankAccounts) &&
-              bankAccounts.length > 0
-            ) {
-              // Find the primary account or use the first one
-              const primaryAccount =
-                bankAccounts.find((acc: any) => acc.is_primary) ||
-                bankAccounts[0];
-
-              console.log('Selected primary account:', primaryAccount);
-
-              const newBankAccount = {
-                person_id: personId,
-                account_holder_name:
-                  primaryAccount.account_holder_name ||
-                  `${data.firstName} ${data.lastName}`,
-                bank_name: primaryAccount.bank_name || '',
-                account_number: primaryAccount.account_number || '',
-                routing_number: primaryAccount.routing_number || '',
-                currency: primaryAccount.currency || 'USD',
-                account_type: primaryAccount.account_type || 'Checking', // Note: capitalized first letter
-                is_primary: primaryAccount.is_primary || true,
-                country:
-                  primaryAccount.country || data.address?.country || 'US',
-                verified: primaryAccount.verified || false,
-              };
-
-              console.log('Setting bank account data:', newBankAccount);
-              setBankAccount(newBankAccount);
-            } else {
-              console.log(
-                'No bank accounts found, creating empty bank account object'
-              );
-              // If no bank accounts found, create an empty one with person data
-              const emptyBankAccount = {
-                person_id: personId,
-                account_holder_name: `${data.firstName} ${data.lastName}`,
-                bank_name: '',
-                account_number: '',
-                routing_number: '',
-                currency: 'USD',
-                account_type: 'Checking', // Note: capitalized first letter
-                is_primary: true,
-                country: data.address?.country || 'US',
-                verified: false,
-              };
-              setBankAccount(emptyBankAccount);
-            }
-          } catch (error) {
-            console.error('Error fetching bank accounts:', error);
-            // Even if there's an error, create a default bank account object
-            const defaultBankAccount = {
-              person_id: personId,
-              account_holder_name: `${data.firstName} ${data.lastName}`,
-              bank_name: '',
-              account_number: '',
-              routing_number: '',
-              currency: 'USD',
-              account_type: 'Checking', // Note: capitalized first letter
-              is_primary: true,
-              country: data.address?.country || 'US',
-              verified: false,
-            };
-            setBankAccount(defaultBankAccount);
-          }
-        }
-        // Update compensation data if we're on the compensation step
-        if (active === 'c') {
-          // Map API fields to component field names
-          const newCompensation = {
-            personId: personId,
-            hourlyRate: data.hourly_rate || 0,
-            salary: data.base_pay || 0,
-            paymentFrequency: data.compensation_schedule || 'Monthly',
-            eligibleForTips: data.eligible_for_tips || false,
-            eligibleForOvertime: data.eligible_for_overtime || false,
-            paid_time_off: data.paidTimeOff || [],
-          };
-          console.log('Setting compensation data:', newCompensation);
-          setCompensation(newCompensation);
-        }
-
-        // Update schedule info if we're on the schedule step
-        if (active === 'ps') {
-          const newSchedule = {
-            personId: personId,
-            payScheduleId: data.pay_schedule?.uuid || '',
-            payCycleName: data.compensation_schedule || '',
-            firstPayDate: data.pay_schedule?.first_pay_date || '',
-            endPayDate: data.pay_schedule?.end_date || '',
-          };
-          console.log('Setting schedule data:', newSchedule);
-          setSchedule(newSchedule);
-        }
-
-        // Increment key to force re-render of components with new data
-        setFormKey((prev) => prev + 1);
+        console.log('Setting bank account data:', newBankAccount);
+        setBankAccount(newBankAccount);
+      } else {
+        // If no bank accounts found, create an empty one with person data
+        const emptyBankAccount = {
+          person_id: personId,
+          account_holder_name: personData
+            ? `${personData.firstName} ${personData.lastName}`
+            : '',
+          bank_name: '',
+          account_number: '',
+          routing_number: '',
+          currency: 'USD',
+          account_type: 'Checking',
+          is_primary: true,
+          country: personData?.address?.country || 'US',
+          verified: false,
+        };
+        setBankAccount(emptyBankAccount);
       }
     } catch (error) {
-      console.error('Error fetching person data:', error);
-      toast.error('Failed to load employee data');
-    } finally {
-      setIsFetching(false);
+      console.error('Error fetching bank accounts:', error);
+      // Create a default bank account object
+      const defaultBankAccount = {
+        person_id: personId,
+        account_holder_name: personData
+          ? `${personData.firstName} ${personData.lastName}`
+          : '',
+        bank_name: '',
+        account_number: '',
+        routing_number: '',
+        currency: 'USD',
+        account_type: 'Checking',
+        is_primary: true,
+        country: personData?.address?.country || 'US',
+        verified: false,
+      };
+      setBankAccount(defaultBankAccount);
     }
   };
+
   // Save active step to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('potta_activeStep', active);
@@ -520,6 +604,7 @@ const People = () => {
     setBenefit(null);
     setTaxInfo(null);
     setActive('ebi');
+    setViewMode(false);
   };
 
   // Format data according to the required payload structure
@@ -543,6 +628,7 @@ const People = () => {
       tax_payer_number: baseInfo.taxPayerNumber,
       national_identification_number: baseInfo.nationalId,
       roleId: baseInfo.roleId, // Use the selected roleId
+      matricule: baseInfo.matricule,
       isActive: true,
       address: {
         address: address.address,
@@ -625,6 +711,34 @@ const People = () => {
 
   // Handle proceed button click
   const handleProceed = async () => {
+    if (viewMode) {
+      // In view mode, just navigate between tabs
+      switch (active) {
+        case 'ebi':
+          setActive('el');
+          break;
+        case 'el':
+          setActive('ba');
+          break;
+        case 'ba':
+          setActive('c');
+          break;
+        case 'c':
+          setActive('ps');
+          break;
+        case 'ps':
+          setActive('bad');
+          break;
+        case 'bad':
+          setActive('eti');
+          break;
+        case 'eti':
+          handleCloseModal();
+          break;
+      }
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -787,6 +901,7 @@ const People = () => {
   // Close the modal with animation
   const handleCloseModal = () => {
     if (
+      viewMode ||
       window.confirm(
         'Are you sure you want to close? Any unsaved changes will be lost.'
       )
@@ -799,6 +914,7 @@ const People = () => {
       }, 300); // Match this with the CSS animation duration
     }
   };
+
   const closeModalWithoutConfirmation = () => {
     setModalAnimation('animate-slide-out-top');
     // Wait for animation to complete before hiding modal
@@ -825,10 +941,13 @@ const People = () => {
           />
         </div>
 
-        {isFetching ? (
-          <CustomLoader />
-        ) : (
-          <div className="bg-white">
+        {/* Table with loading state */}
+        <div className="bg-white">
+          {isFetching && !showModal ? (
+            <div className="p-8">
+              <CustomLoader />
+            </div>
+          ) : (
             <MyTable
               columns={columns}
               data={employees}
@@ -837,9 +956,17 @@ const People = () => {
               pagination={employees.length > 9}
               paginationTotalRows={totalPages * pageSize}
               onChangePage={handlePageChange}
+              noDataComponent={
+                <div className="p-8 text-center">
+                  <p className="text-gray-500 text-lg">No employees found</p>
+                  <p className="text-gray-400 mt-2">
+                    Add a new employee to get started
+                  </p>
+                </div>
+              }
             />
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Modal Overlay */}
@@ -851,7 +978,16 @@ const People = () => {
           >
             <div className="sticky top-0 bg-white p-4 border-b flex justify-between items-center z-10">
               <h2 className="text-xl font-bold">
-                {personId ? 'Edit Employee' : 'New Employee'}
+                {viewMode
+                  ? 'View Employee'
+                  : personId
+                  ? 'Edit Employee'
+                  : 'New Employee'}
+                {personData && (
+                  <span className="ml-2 text-gray-500 text-base">
+                    {personData.firstName} {personData.lastName}
+                  </span>
+                )}
               </h2>
               <button
                 onClick={closeModalWithoutConfirmation}
@@ -874,8 +1010,8 @@ const People = () => {
               </button>
             </div>
 
-            <div className="w-full flex px-4 ">
-              <div className="w-[16%] pt-10 item-left space-y-7 border-r ">
+            <div className="w-full flex px-4">
+              <div className="w-[16%] pt-10 item-left space-y-7 border-r">
                 <div className="" onClick={() => handleTabClick('ebi')}>
                   <p
                     className={`whitespace-nowrap ${
@@ -931,115 +1067,131 @@ const People = () => {
                   </p>
                 </div>
               </div>
-              <div className="w-full overflow-y-auto h-[calc(100vh-68px)]  pt-0 relative">
+              <div className="w-full overflow-y-auto h-[calc(100vh-68px)] pt-0 relative">
                 {isFetching && (
                   <div className="fixed z-[9999] backdrop-blur-sm top-0 left-0 h-screen w-screen grid place-content-center">
-                    <PottaLoader />
+                    <div className="flex flex-col items-center">
+                      <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                      <p className="mt-4 text-gray-600">
+                        Loading employee data...
+                      </p>
+                    </div>
                   </div>
                 )}
 
-                {/* {personId && (
-                  <div className="bg-green-50 p-3 mb-4 rounded-md border border-green-200">
-                    <p className="text-green-800 font-medium">
-                      Employee ID: {personId}
-                    </p>
-                    {personData && (
-                      <p className="text-green-700">
-                        {personData.firstName} {personData.lastName}
-                      </p>
+                {!isFetching && (
+                  <div className="w-full overflow-auto">
+                    {active === 'ps' && (
+                      <Schedule
+                        key={`schedule-${formKey}`}
+                        onChange={handleScheduleChange}
+                        initialData={schedule}
+                        personId={personId || ''}
+                        onComplete={() => setActive('bad')}
+                        readOnly={viewMode}
+                      />
+                    )}
+                    {active === 'ebi' && (
+                      <BaseInfo
+                        key={`baseInfo-${formKey}`}
+                        onChange={handleBaseInfoChange}
+                        initialData={baseInfo}
+                        readOnly={viewMode}
+                      />
+                    )}
+                    {active === 'el' && (
+                      <Address
+                        key={`address-${formKey}`}
+                        onChange={handleAddressChange}
+                        initialData={address}
+                        readOnly={viewMode}
+                      />
+                    )}
+                    {active === 'ba' && (
+                      <BankAccount
+                        key={`bankAccount-${formKey}`}
+                        personId={personId || ''}
+                        onChange={handleBankAccountChange}
+                        initialData={bankAccount}
+                        readOnly={viewMode}
+                      />
+                    )}
+                    {active === 'c' && (
+                      <Compensation
+                        key={`compensation-${formKey}`}
+                        personId={personId || ''}
+                        onChange={handleCompensationChange}
+                        initialData={compensation}
+                        onComplete={() => setActive('ps')}
+                        readOnly={viewMode}
+                      />
+                    )}
+
+                    {active === 'bad' && (
+                      <Benefit
+                        key={`benefit-${formKey}`}
+                        personId={personId || ''}
+                        onComplete={() => {
+                          clearSavedData();
+                          closeModalWithoutConfirmation();
+                          fetchEmployees();
+                        }}
+                        readOnly={viewMode}
+                      />
                     )}
                   </div>
-                )} */}
-
-                <div className=" w-full overflow-auto">
-                  {active === 'ps' && (
-                    <Schedule
-                      key={`schedule-${formKey}`}
-                      onChange={handleScheduleChange}
-                      initialData={schedule}
-                      personId={personId || ''}
-                      onComplete={() => setActive('bad')}
-                    />
-                  )}
-                  {active === 'ebi' && (
-                    <BaseInfo
-                      key={`baseInfo-${formKey}`}
-                      onChange={handleBaseInfoChange}
-                      initialData={baseInfo}
-                    />
-                  )}
-                  {active === 'el' && (
-                    <Address
-                      key={`address-${formKey}`}
-                      onChange={handleAddressChange}
-                      initialData={address}
-                    />
-                  )}
-                  {active === 'ba' && (
-                    <BankAccount
-                      key={`bankAccount-${formKey}`}
-                      personId={personId || ''}
-                      onChange={handleBankAccountChange}
-                      initialData={bankAccount}
-                    />
-                  )}
-                  {active === 'c' && (
-                    <Compensation
-                      key={`compensation-${formKey}`}
-                      personId={personId || ''}
-                      onChange={handleCompensationChange}
-                      initialData={compensation}
-                      onComplete={() => setActive('ps')} // Add this line
-                    />
-                  )}
-
-                  {active === 'bad' && (
-                    <Benefit
-                      key={`benefit-${formKey}`}
-                      personId={personId || ''}
-                      onComplete={() => {
-                        clearSavedData();
-                        closeModalWithoutConfirmation();
-                        fetchEmployees();
-                      }}
-                    />
-                  )}
-                </div>
+                )}
 
                 {/* Only show navigation buttons for stages that need them */}
-                {shouldShowButtons() && (
+                {shouldShowButtons() && !isFetching && (
                   <div className="w-full p-2 flex justify-between mt-5 px-14 mb-6">
-                    {/* Reset button */}
-                    <Button
-                      text="Reset Form"
-                      type="button"
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            'Are you sure you want to reset the form? All data will be lost.'
-                          )
-                        ) {
-                          clearSavedData();
-                        }
-                      }}
-                      className="bg-red-500 hover:bg-red-600"
-                    />
-
-                    {/* Proceed button */}
-                    <Button
-                      text={
-                        isLoading
-                          ? 'Processing...'
-                          : active === 'el' && !personId
-                          ? 'Create Employee'
-                          : active === 'eti'
-                          ? 'Complete Setup'
-                          : 'Proceed'
-                      }
-                      type={'submit'}
-                      onClick={handleProceed}
-                      disabled={isLoading}
-                    />
+                    {/* Show different buttons based on view mode */}
+                    {viewMode ? (
+                      <>
+                        <Button
+                          text="Close"
+                          type="button"
+                          onClick={closeModalWithoutConfirmation}
+                          className="bg-gray-500 hover:bg-gray-600"
+                        />
+                        <Button
+                          text={active === 'eti' ? 'Done' : 'Next'}
+                          type="button"
+                          onClick={handleProceed}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          text="Reset Form"
+                          type="button"
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                'Are you sure you want to reset the form? All data will be lost.'
+                              )
+                            ) {
+                              clearSavedData();
+                            }
+                          }}
+                          className="bg-red-500 hover:bg-red-600"
+                        />
+                        <Button
+                          text={
+                            isLoading
+                              ? 'Processing...'
+                              : active === 'el' && !personId
+                              ? 'Create Employee'
+                              : active === 'eti'
+                              ? 'Complete Setup'
+                              : 'Proceed'
+                          }
+                          type={'submit'}
+                          onClick={handleProceed}
+                          disabled={isLoading}
+                        />
+                      </>
+                    )}
                   </div>
                 )}
               </div>

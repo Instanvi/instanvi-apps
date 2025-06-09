@@ -98989,7 +98989,7 @@
       }
     }
   },
-  "11592812297849076580": {
+  "13970129430735317425": {
     "targets": {
       "test": {
         "command": "jest",
@@ -99014,7 +99014,7 @@
         "inputs": [
           "default",
           "^production",
-          "{workspaceRoot}/jest.preset.js",
+          "{workspaceRoot}\\jest.preset.js",
           {
             "externalDependencies": [
               "jest"
@@ -99022,83 +99022,7 @@
           }
         ],
         "outputs": [
-          "{workspaceRoot}/coverage/apps/potta"
-        ]
-      }
-    }
-  },
-  "15501662685195038125": {
-    "targets": {
-      "test": {
-        "command": "jest",
-        "options": {
-          "cwd": "apps/potta"
-        },
-        "metadata": {
-          "technologies": [
-            "jest"
-          ],
-          "description": "Run Jest Tests",
-          "help": {
-            "command": "npx jest --help",
-            "example": {
-              "options": {
-                "coverage": true
-              }
-            }
-          }
-        },
-        "cache": true,
-        "inputs": [
-          "default",
-          "^production",
-          "{workspaceRoot}/jest.preset.js",
-          {
-            "externalDependencies": [
-              "jest"
-            ]
-          }
-        ],
-        "outputs": [
-          "{workspaceRoot}/coverage/apps/potta"
-        ]
-      }
-    }
-  },
-  "16077880811862402800": {
-    "targets": {
-      "test": {
-        "command": "jest",
-        "options": {
-          "cwd": "apps/potta"
-        },
-        "metadata": {
-          "technologies": [
-            "jest"
-          ],
-          "description": "Run Jest Tests",
-          "help": {
-            "command": "npx jest --help",
-            "example": {
-              "options": {
-                "coverage": true
-              }
-            }
-          }
-        },
-        "cache": true,
-        "inputs": [
-          "default",
-          "^production",
-          "{workspaceRoot}/jest.preset.js",
-          {
-            "externalDependencies": [
-              "jest"
-            ]
-          }
-        ],
-        "outputs": [
-          "{workspaceRoot}/coverage/apps/potta"
+          "{workspaceRoot}\\coverage\\apps\\potta"
         ]
       }
     }

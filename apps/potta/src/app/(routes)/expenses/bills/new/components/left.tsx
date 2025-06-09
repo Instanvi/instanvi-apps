@@ -1,41 +1,39 @@
-'use client'; // For Next.js 13+ App Directory
+'use client';
 import Input from '@potta/components/input';
-import SearchSelect from '@potta/components/search-select';
-import { useContext, useState, useEffect, useRef } from 'react';
 import DynamicTable from './newtableInvoice';
 import Button from '@potta/components/button';
-import { ContextData } from '@potta/components/context';
-import useGetAllCustomers from '@potta/app/(routes)/customers/hooks/useGetAllCustomers';
-import SliderCustomer from '@potta/app/(routes)/customers/components/customerSlider';
 import Select from '@potta/components/select';
+import { ContextData } from '@potta/components/context';
+import SearchSelect from '@potta/components/search-select';
 import { Customer } from '../../../../customers/utils/types';
+import { useContext, useState, useEffect, useRef } from 'react';
+import SliderCustomer from '@potta/app/(routes)/customers/components/customerSlider';
+import useGetAllCustomers from '@potta/app/(routes)/customers/hooks/useGetAllCustomers';
 
-// Define Option interface to match the one in SearchSelect component
 interface Option {
   label: string;
   value: string | number;
 }
 
-// Add these interfaces at the top of your file with the other interfaces
 interface TableItem {
-  name: string;
-  qty: number;
-  price: number;
-  tax: number;
-  productId: string;
-  uuid: string;
   id: number;
+  qty: number;
+  tax: number;
+  name: string;
+  uuid: string;
+  price: number;
+  productId: string;
 }
 
 interface LineItemsDto {
-  description: string;
-  quantity: number;
-  discountCap: number;
-  discountType: string | null;
-  unitPrice: number;
   taxRate: number;
-  discountRate: number;
+  quantity: number;
   productId: string;
+  unitPrice: number;
+  description: string;
+  discountCap: number;
+  discountRate: number;
+  discountType: string | null;
 }
 
 const Left = () => {
@@ -102,7 +100,6 @@ const Left = () => {
   const handleInputChange = (key: string, value: any) => {
     console.log(`Changing ${key} to:`, value);
 
-    // Update local state
     switch (key) {
       case 'date':
         setDate(value);

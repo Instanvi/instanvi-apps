@@ -1,10 +1,9 @@
-import react, { useState } from 'react';
 import Left from './components/left';
 import PdfView from './components/pdfview';
 
 import {
-  ResizableHandle,
   ResizablePanel,
+  ResizableHandle,
   ResizablePanelGroup,
 } from '@potta/components/resizable';
 import RootLayout from '../../../layout';

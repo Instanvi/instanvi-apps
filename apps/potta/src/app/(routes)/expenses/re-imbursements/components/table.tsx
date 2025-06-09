@@ -1,26 +1,25 @@
+/* eslint-disable @next/next/no-img-element */
 // src/components/PaymentRequestDataTableWrapper.tsx (New File)
 'use client';
 
 import React from 'react';
 
-import {
-  MoreHorizontal,
-  Check as CheckIcon,
-  Briefcase,
-  Landmark,
-} from 'lucide-react'; // Import necessary icons
+import { MoreHorizontal } from 'lucide-react'; // Import necessary icons
 
-import { cn } from '@potta/lib/utils';
+import { Icon } from '@iconify/react';
+import { Button } from '@potta/components/shadcn/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@potta/components/shadcn/dropdown';
-import { Button } from '@potta/components/shadcn/button';
 import MyTable from '@potta/components/table';
-import { PaymentMethod, PaymentRequest } from '../../budgets/details/utils/types';
-import { Icon } from '@iconify/react';
+import { cn } from '@potta/lib/utils';
+import {
+  PaymentMethod,
+  PaymentRequest,
+} from '../../budgets/details/utils/types';
 
 interface PaymentRequestDataTableWrapperProps {
   requests: PaymentRequest[];
@@ -58,8 +57,7 @@ const PaymentMethodIcon: React.FC<{ method: PaymentMethod }> = ({ method }) => {
   );
 };
 
-// Helper for currency format (same as before)
-const formatTableCurrency = (amount: number, currencyCode: string = 'XAF') => {
+const formatTableCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
     style: 'decimal',
     minimumFractionDigits: 0,
@@ -73,13 +71,12 @@ export function PaymentRequestDataTableWrapper({
   requests,
   isLoading = false,
 }: PaymentRequestDataTableWrapperProps) {
-  // Define columns for react-data-table-component
   const columns = React.useMemo(
     () => [
       {
         name: 'Ref',
         selector: (row: PaymentRequest) =>
-          row.ref === 'Today' ? row.date : row.ref, // Use date if ref is 'Today' for sorting potentially
+          row.ref === 'Today' ? row.date : row.ref,
         sortable: true,
         cell: (row: PaymentRequest) =>
           row.ref === 'Today' ? (
@@ -135,13 +132,13 @@ export function PaymentRequestDataTableWrapper({
         center: true,
         cell: (row: PaymentRequest) => (
           <div className="border-r pr-8 border-black">
-                                <div className="flex items-center gap-3  w-fit px-3 py-0.5 border border-green-500 bg-green-50 text-green-700">
-                                  <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
-                                    <Icon icon="material-symbols:check" width="20" height="20" />
-                                  </div>
-                                  Approved
-                                </div>
-                              </div>
+            <div className="flex items-center gap-3  w-fit px-3 py-0.5 border border-green-500 bg-green-50 text-green-700">
+              <div className="flex items-center justify-center text-white bg-green-700 rounded-full size-4">
+                <Icon icon="material-symbols:check" width="20" height="20" />
+              </div>
+              Approved
+            </div>
+          </div>
         ),
         minWidth: '100px',
       },
@@ -197,7 +194,7 @@ export function PaymentRequestDataTableWrapper({
       size={false} // Use the default size
       expanded={true} // Not needed
       ExpandableComponent={null} // Not needed
-      minHeight='600px'
+      minHeight="600px"
       // --- Add these if/when implementing server-side pagination ---
       // paginationServer={true}
       // paginationTotalRows={totalRowCount}

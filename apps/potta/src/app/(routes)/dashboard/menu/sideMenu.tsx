@@ -1,12 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
-import React, { FC, Fragment, useContext, useEffect } from 'react';
-import { usePathname } from 'next/navigation'; // Updated import
-import { Dialog, Transition } from '@headlessui/react';
-
-import { LargeSideMenuItem } from './sideMenuItem';
+import { usePathname } from 'next/navigation';
 import SmallSideMenuItem from './sideMenuItem';
+import { LargeSideMenuItem } from './sideMenuItem';
+import { Dialog, Transition } from '@headlessui/react';
 import { ContextData } from '@potta/components/context';
+import React, { FC, Fragment, useContext, useEffect } from 'react';
 
 interface Link {
   text: string;
@@ -14,9 +14,7 @@ interface Link {
   href: string;
 }
 
-interface SideMenuProps {}
-
-const SideMenu: FC<SideMenuProps> = () => {
+const SideMenu: FC = () => {
   const context = useContext(ContextData);
   const pathname = usePathname(); // Use usePathname
 
@@ -97,16 +95,16 @@ const SideMenu: FC<SideMenuProps> = () => {
         <Dialog
           as="div"
           className="relative z-20 lg:hidden"
-          onClose={context?.setSidebarOpen || (() => {})} // Fallback function
+          onClose={(value) => context?.setSidebarOpen(value)}
         >
           <Transition.Child
             as={Fragment}
-            enter="transition-opacity ease-linear duration-300"
+            leaveTo="opacity-0"
             enterFrom="opacity-0"
             enterTo="opacity-100"
-            leave="transition-opacity ease-linear duration-300"
             leaveFrom="opacity-100"
-            leaveTo="opacity-0"
+            enter="transition-opacity ease-linear duration-300"
+            leave="transition-opacity ease-linear duration-300"
           >
             <div className="fixed inset-0 bg-gray-900/80" />
           </Transition.Child>
@@ -114,22 +112,22 @@ const SideMenu: FC<SideMenuProps> = () => {
           <div className="fixed inset-0 flex">
             <Transition.Child
               as={Fragment}
-              enter="transition ease-in-out duration-300 transform"
-              enterFrom="-translate-x-full"
               enterTo="translate-x-0"
-              leave="transition ease-in-out duration-300 transform"
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
+              enterFrom="-translate-x-full"
+              enter="transition ease-in-out duration-300 transform"
+              leave="transition ease-in-out duration-300 transform"
             >
               <Dialog.Panel className="relative mr-16 flex w-full max-w-xs flex-1">
                 <Transition.Child
                   as={Fragment}
-                  enter="ease-in-out duration-300"
+                  leaveTo="opacity-0"
                   enterFrom="opacity-0"
                   enterTo="opacity-100"
-                  leave="ease-in-out duration-300"
                   leaveFrom="opacity-100"
-                  leaveTo="opacity-0"
+                  enter="ease-in-out duration-300"
+                  leave="ease-in-out duration-300"
                 >
                   <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
                     <button
@@ -145,7 +143,7 @@ const SideMenu: FC<SideMenuProps> = () => {
                 <div className="flex overflow-x-hidden grow flex-col gap-y-5 overflow-y-auto border-r w-full border-gray-200 bg-green-50 pb-4">
                   <div className="flex h-16 px-8 shrink-0 items-center">
                     <div className="flex mx-2 bg-white rounded-full h-10 w-10 justify-evenly items-center">
-                      <img src={`/images/pottaLogo.svg`} alt="" />
+                      <img src={`/images/pottaLogo.svg`} alt="logo" />
                     </div>
                   </div>
                   <nav className="flex flex-1 flex-col">
@@ -167,10 +165,10 @@ const SideMenu: FC<SideMenuProps> = () => {
                         {adminLinks.map((link, index) => (
                           <LargeSideMenuItem
                             key={index}
+                            active={false}
                             text={link.text}
                             href={link.href}
                             icon={link.icon}
-                            active={false}
                           />
                         ))}
                       </div>

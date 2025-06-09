@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import MyTable from '@potta/components/table';
 import React from 'react';
 

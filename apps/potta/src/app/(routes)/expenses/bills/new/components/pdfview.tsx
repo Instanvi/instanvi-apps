@@ -1,25 +1,25 @@
 'use client';
+import { useContext } from 'react';
 import Button from '@potta/components/button';
 import { ContextData } from '@potta/components/context';
-import React, { useContext, useEffect, useState } from 'react';
 import { Customer } from '../../../../customers/utils/types';
 import useGetOneCustomer from '../../../../customers/hooks/useGetOneCustomer';
 
 interface TableItem {
-  name: string;
-  qty: number;
-  price: number | string;
-  tax: number | string;
-  productId: string;
-  uuid: string;
   id: number;
+  qty: number;
+  name: string;
+  uuid: string;
+  productId: string;
+  tax: number | string;
+  price: number | string;
 }
 
 const PdfView = () => {
   const context = useContext(ContextData);
   const contextData = context?.data || {};
+  const customerId = contextData.customerName;
   const tableData: TableItem[] = contextData.table || [];
-  const customerId = contextData.customerName; // Get customer ID from context
 
   const getCurrencySymbol = (currencyCode: string): string => {
     switch (currencyCode) {
@@ -50,9 +50,9 @@ const PdfView = () => {
   }, 0);
 
   const totalTax = tableData.reduce((sum: number, item: TableItem) => {
-    const price = Number(item.price);
     const qty = Number(item.qty);
     const tax = Number(item.tax);
+    const price = Number(item.price);
     return sum + (price * qty * tax) / 100;
   }, 0);
 
@@ -85,7 +85,7 @@ const PdfView = () => {
               <div className="space-y-2 text-sm text-gray-400 flex-col">
                 <p>ABC Company</p>
                 <p>hello@ABCcompany.com</p>
-                <p>ABC, Street, D'la Cameroon</p>
+                <p>ABC, Street, {`D'la`} Cameroon</p>
                 <p>+237 695904751</p>
               </div>
             </div>

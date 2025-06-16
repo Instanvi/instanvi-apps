@@ -11,5 +11,17 @@
         "port":4300
       }
     }
-  }
+  },
+
+  "scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint",
+  "lint-staged": "lint-staged",
+  "format": "prettier --check .",
+  "format:fix": "prettier --write --list-different .",
+  "prepare": "husky"
 }
+}
+

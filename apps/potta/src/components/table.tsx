@@ -5,7 +5,7 @@ import DataTable from 'react-data-table-component';
 import CustomLoader from './loader';
 
 // Define a type for column with border options
-interface ColumnWithBorder {
+export interface ColumnWithBorder {
   name: string | ReactNode; // Updated to accept both string and ReactNode
   selector: (row: any) => any;
   sortable?: boolean;

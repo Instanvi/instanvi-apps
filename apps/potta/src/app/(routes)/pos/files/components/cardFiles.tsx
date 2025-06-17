@@ -1,5 +1,5 @@
+import Image from 'next/image';
 import React from 'react';
-
 const CardFile = () => {
   const data = [
     {
@@ -75,7 +75,7 @@ const CardFile = () => {
           if (item.char === 'folder')
             return (
               <div className="w-full h-36 flex justify-center relative items-center border">
-                <img src="/icons/folder.svg" alt="" className="-mt-2" />
+                <Image src="/icons/folder.svg" alt="" className="-mt-2" />
                 <p className="absolute bottom-2 left-1/3 ml-2">{item.name}</p>
               </div>
             );

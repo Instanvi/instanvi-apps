@@ -9,6 +9,7 @@ import React, { FC, useState, useContext, Fragment, ContextType } from 'react';
 const NewBudget: FC = () => {
   const context = useContext(ContextData);
   const [open, setOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [newBudget, setNewBudget] = useState<{
     budget_name: string;
@@ -59,6 +60,8 @@ const NewBudget: FC = () => {
 
   return (
     <Modal
+      open={isModalOpen}
+      setOpen={setIsModalOpen}
       icon={<i className="ri-add-line"></i>}
       title="New Budget"
       text="Add New Budget"
@@ -96,7 +99,7 @@ const NewBudget: FC = () => {
                     options={[{ value: 'XAF', label: 'XAF' }]}
                     border
                     selectedValue={'XAF'}
-                    onChange={() => {}}
+                    onChange={() => console.log('')}
                     bg={'border'}
                   />
                 </div>
@@ -111,7 +114,7 @@ const NewBudget: FC = () => {
                 options={[{ value: 'One time', label: 'One time' }]}
                 border={false}
                 selectedValue={'One time'}
-                onChange={() => {}}
+                onChange={() => console.log('')}
                 bg={'border'}
               />
             </div>

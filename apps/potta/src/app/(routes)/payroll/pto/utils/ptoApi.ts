@@ -15,15 +15,8 @@ export const ptoApi = {
 
   // Get all PTO policies with pagination and filtering
   getPTOPolicies: async (filters: any = {}) => {
-    try {
-      const response = await axios.post(
-        '/paid-time-off/filter',
-        filters
-      );
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await axios.post('/paid-time-off/filter', filters);
+    return response.data;
   },
 
   // Get a specific PTO policy by ID
@@ -42,12 +35,9 @@ export const ptoApi = {
   // Accrue leave for a PTO policy
   accrueLeave: async (id: string, amount: number) => {
     try {
-      const response = await axios.put(
-        `/paid-time-off/accrue/${id}`,
-        {
-          amount,
-        }
-      );
+      const response = await axios.put(`/paid-time-off/accrue/${id}`, {
+        amount,
+      });
       return { success: true, data: response.data };
     } catch (error) {
       console.error(`Error accruing leave for PTO ${id}:`, error);

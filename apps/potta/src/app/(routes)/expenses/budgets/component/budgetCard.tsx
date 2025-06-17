@@ -1,15 +1,12 @@
 // src/components/BudgetCard.tsx
-import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@potta/components/avatar';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from '@potta/components/card';
-import { Progress } from '@potta/components/progress';
-import { Avatar, AvatarFallback, AvatarImage } from '@potta/components/avatar';
 // Adjust path if needed
-import { cn } from '@potta/lib/utils'; // Standard shadcn/ui utility
 import { Budget } from '../new/types/budget';
 interface BudgetCardProps {
   budget: Budget;
@@ -17,7 +14,7 @@ interface BudgetCardProps {
 }
 
 // Helper function for currency formatting (keep as before)
-const formatCurrency = (amount: number, currencyCode: string = 'XAF') => {
+const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
@@ -100,18 +97,16 @@ export function BudgetCard({ budget, maxAvatars = 2 }: BudgetCardProps) {
           <div
             className="h-full bg-orange-400 transition-all duration-300 ease-in-out"
             style={{ width: `${spentPercent}%` }}
-            title={`Spent: ${formatCurrency(
-              spent,
-              currency
-            )} (${spentPercent.toFixed(1)}%)`} // Optional tooltip
+            title={`Spent: ${formatCurrency(spent)} (${spentPercent.toFixed(
+              1
+            )}%)`} // Optional tooltip
           ></div>
           {/* Available Segment (Red) */}
           <div
             className="h-full bg-red-500 transition-all duration-300 ease-in-out"
             style={{ width: `${availablePercent}%` }}
             title={`Available: ${formatCurrency(
-              available,
-              currency
+              available
             )} (${availablePercent.toFixed(1)}%)`} // Optional tooltip
           ></div>
           {/* Remaining/Allocated Segment (Green) - Represents the part of 'Allocated' not Spent or Available */}

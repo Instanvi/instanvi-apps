@@ -57,7 +57,7 @@ const Dashboard = () => {
                 options={[{ label: '', value: '' }]}
                 name="Pending"
                 selectedValue={''}
-                onChange={() => {}}
+                onChange={() => console.log('')}
                 bg={''}
               />
             </div>
@@ -66,7 +66,7 @@ const Dashboard = () => {
                 options={[{ label: '', value: '' }]}
                 name="MOMO"
                 selectedValue={''}
-                onChange={() => {}}
+                onChange={() => console.log('')}
                 bg={''}
               />
             </div>

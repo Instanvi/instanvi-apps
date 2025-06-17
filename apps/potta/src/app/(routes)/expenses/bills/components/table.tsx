@@ -3,27 +3,22 @@
 
 import React from 'react';
 
-import {
-  MoreHorizontal,
-  Check as CheckIcon,
-  Briefcase,
-  Landmark,
-} from 'lucide-react'; // Import necessary icons
+import { MoreHorizontal } from 'lucide-react'; // Import necessary icons
 
-import { cn } from '@potta/lib/utils';
+import { Icon } from '@iconify/react';
+import { Button } from '@potta/components/shadcn/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@potta/components/shadcn/dropdown';
-import { Button } from '@potta/components/shadcn/button';
-import MyTable from '@potta/components/table';
+import MyTable, { ColumnWithBorder } from '@potta/components/table';
+import { cn } from '@potta/lib/utils';
 import {
   PaymentMethod,
   PaymentRequest,
 } from '../../budgets/details/utils/types';
-import { Icon } from '@iconify/react';
 
 interface PaymentRequestDataTableWrapperProps {
   requests: PaymentRequest[];
@@ -62,7 +57,7 @@ const PaymentMethodIcon: React.FC<{ method: PaymentMethod }> = ({ method }) => {
 };
 
 // Helper for currency format (same as before)
-const formatTableCurrency = (amount: number, currencyCode: string = 'XAF') => {
+const formatTableCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', {
     style: 'decimal',
     minimumFractionDigits: 0,
@@ -191,7 +186,7 @@ export function PaymentRequestDataTableWrapper({
 
   return (
     <MyTable
-      columns={columns}
+      columns={columns as ColumnWithBorder[]}
       data={requests}
       selectable={true} // Enable checkboxes as per design
       pagination={false} // Disable pagination as per design

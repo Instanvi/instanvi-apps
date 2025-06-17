@@ -94,7 +94,9 @@ const PdfView = () => {
       <div className="max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full mb-10">
         <div className="h-36 w-full flex items-center justify-between px-8 bg-yellow-800">
           <div>
-            <p className="text-3xl font-semibold text-white">Recurring {invoiceType}</p>
+            <p className="text-3xl font-semibold text-white">
+              Recurring {invoiceType}
+            </p>
             <p className="text-white mt-2">#{invoiceNumber}</p>
           </div>
           <div className="text-right text-white">
@@ -109,27 +111,37 @@ const PdfView = () => {
             </p>
           </div>
         </div>
-        
+
         {/* Recurring Information Box */}
         <div className="px-8 py-4 bg-blue-50 border-l-4 border-blue-500">
           <h3 className="font-bold text-blue-800 mb-2">Recurring Schedule</h3>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p><strong>Frequency:</strong> {frequency}</p>
-              <p><strong>Start Date:</strong> {formattedStartDate}</p>
+              <p>
+                <strong>Frequency:</strong> {frequency}
+              </p>
+              <p>
+                <strong>Start Date:</strong> {formattedStartDate}
+              </p>
             </div>
             <div>
               {formattedEndDate ? (
-                <p><strong>End Date:</strong> {formattedEndDate}</p>
+                <p>
+                  <strong>End Date:</strong> {formattedEndDate}
+                </p>
               ) : occurrences ? (
-                <p><strong>Occurrences:</strong> {occurrences}</p>
+                <p>
+                  <strong>Occurrences:</strong> {occurrences}
+                </p>
               ) : (
-                <p><strong>End:</strong> Not specified</p>
+                <p>
+                  <strong>End:</strong> Not specified
+                </p>
               )}
             </div>
           </div>
         </div>
-        
+
         <div className="p-5 space-y-16 bg-white">
           <div className="mt-5 w-full flex space-x-5">
             <div className="flex w-[40%] space-x-2">
@@ -137,7 +149,7 @@ const PdfView = () => {
               <div className="space-y-2 text-sm text-gray-600 flex-col">
                 <p>ABC Company</p>
                 <p>hello@ABCcompany.com</p>
-                <p>ABC, Street, D'la Cameroon</p>
+                <p>ABC, Street, {`D'la`} Cameroon</p>
                 <p>+237 695904751</p>
               </div>
             </div>
@@ -286,10 +298,13 @@ const PdfView = () => {
                   {total.toFixed(2)}
                 </div>
               </div>
-              
+
               {/* Recurring payment information */}
               <div className="mt-6 pt-4 border-t border-gray-300">
-                <p className="font-medium text-gray-700">This is a recurring invoice. You will be billed {frequency.toLowerCase()}.</p>
+                <p className="font-medium text-gray-700">
+                  This is a recurring invoice. You will be billed{' '}
+                  {frequency.toLowerCase()}.
+                </p>
               </div>
             </div>
           </div>

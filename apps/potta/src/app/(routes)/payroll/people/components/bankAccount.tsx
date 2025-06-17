@@ -8,9 +8,10 @@ import { peopleApi } from '../utils/api';
 import {
   getCountries,
   getCountryName,
-  getCountryCode,
+  // getCountryCode,
   LocationOption,
 } from '@potta/services/locationService';
+import { FieldError } from 'react-hook-form';
 
 interface BankAccountProps {
   personId: string;
@@ -81,7 +82,7 @@ const BankAccount: React.FC<BankAccountProps> = ({
     account_type: initialData?.account_type || 'Checking',
     is_primary:
       initialData?.is_primary !== undefined ? initialData.is_primary : true,
-    // country_code: initialData?.country_code || '',
+    country_code: initialData?.country_code || '',
     country: initialData?.country || '',
     verified:
       initialData?.verified !== undefined ? initialData.verified : false,
@@ -121,7 +122,7 @@ const BankAccount: React.FC<BankAccountProps> = ({
               countryCode = country;
             } else {
               // Try to get code from country name
-              countryCode = getCountryCode(country);
+              // countryCode = getCountryCode(country);
             }
           }
 
@@ -320,7 +321,7 @@ const BankAccount: React.FC<BankAccountProps> = ({
             placeholder="John Doe"
             value={formData.account_holder_name}
             onchange={handleInputChange('account_holder_name')}
-            error={errors.account_holder_name}
+            errors={errors.account_holder_name as unknown as FieldError}
           />
         </div>
 
@@ -333,7 +334,7 @@ const BankAccount: React.FC<BankAccountProps> = ({
             placeholder="Example Bank"
             value={formData.bank_name}
             onchange={handleInputChange('bank_name')}
-            error={errors.bank_name}
+            errors={errors.bank_name}
           />
         </div>
 
@@ -347,7 +348,7 @@ const BankAccount: React.FC<BankAccountProps> = ({
               placeholder="123456789"
               value={formData.account_number}
               onchange={handleInputChange('account_number')}
-              error={errors.account_number}
+              errors={errors.account_number}
             />
           </div>
           <div>
@@ -405,7 +406,7 @@ const BankAccount: React.FC<BankAccountProps> = ({
           />
           {formData.country && !formData.country_code && (
             <p className="text-amber-600 text-sm mt-1">
-              Country "{formData.country}" from address couldn't be matched.
+              Country "{formData.country}" from address couldn&#39;t be matched.
               Please select a country.
             </p>
           )}

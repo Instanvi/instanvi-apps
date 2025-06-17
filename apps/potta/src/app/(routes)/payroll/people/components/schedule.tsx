@@ -85,7 +85,7 @@ const Schedule: React.FC<ScheduleProps> = ({
   const calculateNextPayDate = (
     baseDate: Date,
     schedule: string,
-    iteration: number = 0
+    iteration = 0
   ): Date => {
     const nextDate = new Date(baseDate);
 
@@ -101,8 +101,7 @@ const Schedule: React.FC<ScheduleProps> = ({
         break;
       case 'Bimonthly':
         // For bimonthly (twice a month), use 1st and 15th
-        const currentDay = baseDate.getDate();
-        if (currentDay < 15) {
+        if (baseDate.getDate() < 15) {
           nextDate.setDate(15);
         } else {
           nextDate.setMonth(baseDate.getMonth() + 1);

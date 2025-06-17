@@ -5,9 +5,9 @@ import RootLayout from '../../layout';
 import Search from '@potta/components/search';
 import CustomPopover from '@potta/components/popover';
 
-interface CardProps {}
+// interface CardProps {}
 
-const Card: FC<CardProps> = () => {
+const Card: FC = () => {
   const [heights, setHeights] = useState<string>('');
   const [dashTopHeight, setDashTopHeight] = useState<string>('');
 

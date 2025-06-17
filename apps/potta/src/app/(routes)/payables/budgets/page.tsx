@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, ChangeEvent } from 'react';
+import React, { FC, ChangeEvent, Fragment } from 'react';
 import { useState, useContext } from 'react';
 import Link from 'next/link';
 import NewBudget from './component/modal';
@@ -50,8 +50,9 @@ const Budgets: FC = () => {
             includeDatePicker={true}
             placeholder={''}
             includePopover={false}
-            children={undefined}
-          />
+          >
+            <Fragment />
+          </FilterComponent>
 
           <NewBudget />
         </div>

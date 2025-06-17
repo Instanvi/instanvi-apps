@@ -8,10 +8,9 @@ import Button from '@potta/components/button';
 import Search from '@potta/components/search';
 import Link from 'next/link';
 import { useState } from 'react';
+import { IInvoiceFilter } from '../../invoice/_utils/types';
 import CustomSelect, { IOption } from './components/CustomSelect';
 import SliderInvoice from './components/slideNewInvoice';
-import { IFilter } from './_utils/types';
-import { IInvoiceFilter } from '../../invoice/_utils/types';
 const Invoice = () => {
   const [detailsModal, setDetailsModal] = useState<boolean>(false);
   const [page, setPage] = useState(1);

@@ -58,7 +58,7 @@ const PaymentMethodIcon: React.FC<{ method: PaymentMethod }> = ({ method }) => {
 };
 
 // Helper for currency format (same as before)
-const formatTableCurrency = (amount: number, currencyCode: string = 'XAF') => {
+const formatTableCurrency = (amount: number, currencyCode = 'XAF') => {
   return new Intl.NumberFormat('en-US', {
     style: 'decimal',
     minimumFractionDigits: 0,

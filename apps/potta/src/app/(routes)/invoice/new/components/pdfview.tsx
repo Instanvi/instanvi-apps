@@ -80,7 +80,6 @@ const PdfView = () => {
     <div className="flex min-h-full flex-col items-center justify-center overflow-y-auto w-full scroll bg-[#F2F2F2]">
       <div className="flex min-w-[45rem] justify-between w-full p-8">
         <h3 className="text-xl font-semibold">PDF Preview</h3>
-
       </div>
       <div className="max-w-[48rem] bg-white space-y-8 min-w-[45rem] w-full mb-10">
         <div className="h-36 w-full flex items-center justify-between px-8 bg-yellow-800">
@@ -107,7 +106,7 @@ const PdfView = () => {
               <div className="space-y-2 text-sm text-gray-600 flex-col">
                 <p>ABC Company</p>
                 <p>hello@ABCcompany.com</p>
-                <p>ABC, Street, D'la Cameroon</p>
+                <p>ABC, Street, {`D'la`} Cameroon</p>
                 <p>+237 695904751</p>
               </div>
             </div>

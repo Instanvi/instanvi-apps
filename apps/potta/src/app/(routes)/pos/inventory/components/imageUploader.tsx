@@ -29,24 +29,32 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     };
   }, []);
 
-  // const onDrop = useCallback((acceptedFiles: File[], onChange : (...event: any[]) => void) => {
-  //         if (acceptedFiles.length > 0) {
-  //           const file = acceptedFiles[0];
+  const onDrop = useCallback(
+    (acceptedFiles: File[], onChange: (...event: any[]) => void) => {
+      if (acceptedFiles.length > 0) {
+        const file = acceptedFiles[0];
 
-  //           // Create a preview
-  //           const objectUrl = URL.createObjectURL(file);
-  //           setPreview(objectUrl);
+        // Create a preview
+        const objectUrl = URL.createObjectURL(file);
+        setPreview(objectUrl);
 
-  //           // Store the file reference in the global variable
-  //           _selectedImageFile = file;
+        // Store the file reference in the global variable
+        _selectedImageFile = file;
 
-  //           // Store a temporary value in the form
-  //           onChange(`__file__:${objectUrl}`);
+        // Store a temporary value in the form
+        onChange(`__file__:${objectUrl}`);
 
-  //           console.log('File selected in ImageUploader:', file.name, file.type, file.size);
-  //           console.log('_selectedImageFile after selection:', _selectedImageFile);
-  //         }
-  //       },[])
+        console.log(
+          'File selected in ImageUploader:',
+          file.name,
+          file.type,
+          file.size
+        );
+        console.log('_selectedImageFile after selection:', _selectedImageFile);
+      }
+    },
+    []
+  );
 
   return (
     <Controller

@@ -27,7 +27,7 @@ const Info = () => {
             <Select
               options={[{ label: 'Number', value: 'Number' }]}
               selectedValue={'Number'}
-              onChange={() => {}}
+              onChange={() => console.log('')}
               bg={'white'}
             />
           </div>

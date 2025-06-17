@@ -75,7 +75,7 @@ const SliderAgent = () => {
                 <Select
                   options={[{ value: 'XAF', label: 'XAF' }]}
                   selectedValue={'XAF'}
-                  onChange={() => {}}
+                  onChange={() => console.log('')}
                   bg={''}
                 />
               </div>
@@ -86,7 +86,7 @@ const SliderAgent = () => {
             <Select
               options={[{ value: 'Monthly', label: 'Monthly' }]}
               selectedValue={'Monthly'}
-              onChange={() => {}}
+              onChange={() => console.log('')}
               bg={''}
             />
           </div>

@@ -1,7 +1,6 @@
 import Input from '@potta/components/input';
 
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
-import { IAddressPayload } from '../utils/types';
 import { CustomerPayload } from '../utils/validations';
 
 interface AddressFormProps {

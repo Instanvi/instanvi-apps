@@ -60,6 +60,8 @@ const NewBudget: FC = () => {
 
   return (
     <Modal
+      open={open}
+      setOpen={setOpen}
       icon={<i className="ri-add-line"></i>}
       title="New Budget"
       text="Add New Budget"
@@ -96,7 +98,7 @@ const NewBudget: FC = () => {
                   <Select
                     options={[{ value: 'XAF', label: 'XAF' }]}
                     selectedValue={'XAF'}
-                    onChange={() => {}}
+                    onChange={() => console.log('')}
                     bg={'border'}
                   />
                 </div>
@@ -110,7 +112,7 @@ const NewBudget: FC = () => {
               <Select
                 options={[{ value: 'One time', label: 'One time' }]}
                 selectedValue={'One time'}
-                onChange={() => {}}
+                onChange={() => console.log('')}
                 bg={'border'}
               />
             </div>

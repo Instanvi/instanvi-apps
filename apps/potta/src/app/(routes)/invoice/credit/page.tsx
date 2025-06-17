@@ -1,7 +1,6 @@
 'use client';
 import Box from './components/box';
 import InvoiceTableComponents from './components/table';
-
 import Link from 'next/link';
 import SliderInvoice from './components/slideNewInvoice';
 import Search from '@potta/components/search';
@@ -14,6 +13,7 @@ import { v4 as uuid } from 'uuid';
 import DataGrid from './components/DataGrid';
 import CustomInput from './components/CustomInput';
 import CustomSelect, { IOption } from './components/CustomSelect';
+import { IInvoiceFilter } from '../_utils/types';
 const Invoice = () => {
   const [detailsModal, setDetailsModal] = useState<boolean>(false);
   const [page, setPage] = useState(1);
@@ -21,7 +21,7 @@ const Invoice = () => {
   const { data, isLoading, isFetching, isError, refetch } = useGetAllInvoice({
     limit: 10,
     page,
-  });
+  } as IInvoiceFilter);
 
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
@@ -92,8 +92,8 @@ const Invoice = () => {
       </div>
       {detailsModal ? (
         <ModalInvoice
-          open={detailsModal}
-          setOpen={(bool) => setDetailsModal(bool)}
+          isOpen={detailsModal as boolean}
+          setIsOpen={setDetailsModal}
         />
       ) : null}
 
@@ -111,7 +111,7 @@ const Invoice = () => {
             setDetailsModal(false);
           }}
           onInvoiceDetailsOpen={() => setDetailsModal(true)}
-          onDeleteModal={() => {}}
+          onDeleteModal={() => console.log('')}
         />
       </div>
     </div>

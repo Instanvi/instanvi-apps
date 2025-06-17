@@ -615,7 +615,7 @@ const SliderBenefit = () => {
       edit={false}
       title={'New Benefits'}
       buttonText="benefits"
-      isOpen={isSliderOpen}
+      open={isSliderOpen}
       onOpenChange={setIsSliderOpen}
     >
       <div className="flex min-w-[1100px] flex-col gap-5">

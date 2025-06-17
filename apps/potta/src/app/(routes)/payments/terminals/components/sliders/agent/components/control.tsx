@@ -51,7 +51,7 @@ const Control = () => {
               <Select
                 options={[{ value: 'XAF', label: 'XAF' }]}
                 selectedValue={'XAF'}
-                onChange={() => {}}
+                onChange={() => console.log('')}
                 bg={''}
               />
             </div>

@@ -5,25 +5,25 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import Button from './button';
 
 interface props {
-  children: ReactNode;
   edit: boolean;
-  buttonText?: string;
   title: string;
+  open?: boolean;
   onOpen?: () => void;
-  open?: boolean; // Made optional
-  setOpen?: (value: boolean) => void; // Made optional
+  buttonText?: string;
+  children: ReactNode;
   closeButton?: boolean;
+  setOpen?: (value: boolean) => void;
 }
 
 const Slider: FC<props> = ({
-  children,
   edit,
-  buttonText,
   title,
   onOpen,
+  children,
+  buttonText,
+  closeButton,
   open: externalOpen,
   setOpen: externalSetOpen,
-  closeButton,
 }) => {
   // Internal state for when open/setOpen aren't provided
   const [internalOpen, setInternalOpen] = useState(false);

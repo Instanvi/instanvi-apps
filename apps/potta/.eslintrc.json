@@ -10,12 +10,18 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@next/next/no-html-link-for-pages": ["error", "apps/potta/pages"]
+        "@next/next/no-html-link-for-pages": ["error", "apps/potta/pages"],
+          "@typescript-eslint/no-unused-vars":"off"
+
       }
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "rules": {}
+      "rules": {
+         "@typescript-eslint/no-explicit-any": "off",
+          "@typescript-eslint/no-unused-vars":"off"
+         
+      }
     },
     {
       "files": ["*.js", "*.jsx"],

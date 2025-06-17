@@ -4,15 +4,22 @@ import React, { useState, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { AlertCircle } from 'lucide-react';
 
-interface CodeProps {
-  // Add any props if needed
-}
+// interface CodeProps {
+//   // Add any props if needed
+// }
 
-const Code: React.FC<CodeProps> = () => {
-  const { register, watch, setValue, getValues, formState: { errors }, trigger } = useFormContext();
+const Code: React.FC = () => {
+  const {
+    register,
+    watch,
+    setValue,
+    getValues,
+    formState: { errors },
+    trigger,
+  } = useFormContext();
   const [hasAdvancedSettings, setHasAdvancedSettings] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
-  
+
   // Watch for code and advanced settings fields
   const code = watch('code');
   const programCardPrefix = watch('programCardPrefix');
@@ -21,55 +28,56 @@ const Code: React.FC<CodeProps> = () => {
   const codeSettingsPostfix = watch('codeSettings.postfix');
   const codeSettingsPattern = watch('codeSettings.pattern');
   const codeSettingsCharacterSet = watch('codeSettings.characterSet');
-  
+
   // Check if we have either a code or valid advanced settings
   const hasCode = !!code;
   const hasProgramCardPrefix = !!programCardPrefix;
-  const hasValidAdvancedSettings = hasAdvancedSettings && 
-    !!codeSettingsLength && 
-    !!codeSettingsPrefix && 
-    !!codeSettingsPostfix && 
-    !!codeSettingsPattern && 
+  const hasValidAdvancedSettings =
+    hasAdvancedSettings &&
+    !!codeSettingsLength &&
+    !!codeSettingsPrefix &&
+    !!codeSettingsPostfix &&
+    !!codeSettingsPattern &&
     !!codeSettingsCharacterSet;
-  
+
   // Reactive validation
   useEffect(() => {
     const errors: string[] = [];
-    
+
     // Program card prefix is always required
     if (!programCardPrefix) {
-      errors.push("Program card prefix is required");
+      errors.push('Program card prefix is required');
     }
-    
+
     if (hasAdvancedSettings) {
-      if (!codeSettingsLength) errors.push("Code length is required");
-      if (!codeSettingsPrefix) errors.push("Code prefix is required");
-      if (!codeSettingsPostfix) errors.push("Code postfix is required");
-      if (!codeSettingsPattern) errors.push("Pattern is required");
-      if (!codeSettingsCharacterSet) errors.push("Character set is required");
+      if (!codeSettingsLength) errors.push('Code length is required');
+      if (!codeSettingsPrefix) errors.push('Code prefix is required');
+      if (!codeSettingsPostfix) errors.push('Code postfix is required');
+      if (!codeSettingsPattern) errors.push('Pattern is required');
+      if (!codeSettingsCharacterSet) errors.push('Character set is required');
     } else if (!hasCode) {
-      errors.push("Code is required if not using advanced settings");
+      errors.push('Code is required if not using advanced settings');
     }
-    
+
     setValidationErrors(errors);
   }, [
-    hasAdvancedSettings, 
-    code, 
+    hasAdvancedSettings,
+    code,
     programCardPrefix,
-    codeSettingsLength, 
-    codeSettingsPrefix, 
-    codeSettingsPostfix, 
-    codeSettingsPattern, 
-    codeSettingsCharacterSet
+    codeSettingsLength,
+    codeSettingsPrefix,
+    codeSettingsPostfix,
+    codeSettingsPattern,
+    codeSettingsCharacterSet,
   ]);
-  
+
   // Validate the code tab
   const validateCodeTab = () => {
     // Program card prefix is always required
     if (!programCardPrefix) {
       return false;
     }
-    
+
     // Either need a code or valid advanced settings
     if (hasAdvancedSettings) {
       return hasValidAdvancedSettings;
@@ -77,7 +85,7 @@ const Code: React.FC<CodeProps> = () => {
       return hasCode;
     }
   };
-  
+
   // Add a hidden validation button that can be triggered from the parent
   useEffect(() => {
     // Create a hidden button for validation
@@ -85,9 +93,9 @@ const Code: React.FC<CodeProps> = () => {
     validateButton.id = 'validate-code';
     validateButton.style.display = 'none';
     validateButton.onclick = () => validateCodeTab();
-    
+
     document.body.appendChild(validateButton);
-    
+
     return () => {
       document.body.removeChild(validateButton);
     };
@@ -113,22 +121,26 @@ const Code: React.FC<CodeProps> = () => {
   return (
     <div className="bg-white p-6">
       <h3 className="text-xl font-medium mb-8">Code Settings</h3>
-      
+
       {/* Validation Error Messages - Only show on submit or when fields are touched */}
       {validationErrors.length > 0 && (
         <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-md">
           <div className="flex items-center mb-2">
             <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
-            <h4 className="text-red-600 font-medium">Please fix the following errors:</h4>
+            <h4 className="text-red-600 font-medium">
+              Please fix the following errors:
+            </h4>
           </div>
           <ul className="list-disc pl-5 text-red-500 text-sm">
             {validationErrors.map((error, index) => (
-              <li key={index} className="code-error">{error}</li>
+              <li key={index} className="code-error">
+                {error}
+              </li>
             ))}
           </ul>
         </div>
       )}
-      
+
       {/* Simple Code Input */}
       {!hasAdvancedSettings && (
         <div className="mb-6">
@@ -138,7 +150,9 @@ const Code: React.FC<CodeProps> = () => {
           <input
             type="text"
             {...register('code')}
-            className={`w-1/2 border ${!hasCode ? 'border-red-300' : 'border-gray-300'} px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+            className={`w-1/2 border ${
+              !hasCode ? 'border-red-300' : 'border-gray-300'
+            } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
             placeholder="SAVE20"
           />
           {!hasCode && (
@@ -148,7 +162,7 @@ const Code: React.FC<CodeProps> = () => {
           )}
         </div>
       )}
-      
+
       <div className="space-y-6 w-3/5">
         {/* Program Card Prefix - Now marked as required */}
         <div className="mb-6">
@@ -158,7 +172,9 @@ const Code: React.FC<CodeProps> = () => {
           <input
             type="text"
             {...register('programCardPrefix', { required: true })}
-            className={`w-1/2 border ${!hasProgramCardPrefix ? 'border-red-300' : 'border-gray-300'} px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+            className={`w-1/2 border ${
+              !hasProgramCardPrefix ? 'border-red-300' : 'border-gray-300'
+            } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
             placeholder="Program-02152"
           />
           {!hasProgramCardPrefix && (
@@ -201,9 +217,9 @@ const Code: React.FC<CodeProps> = () => {
             </div>
           </div>
           <p className="mt-1 text-sm text-gray-500">
-            {hasAdvancedSettings 
-              ? "Configure advanced code settings (code will be generated automatically)" 
-              : "Switch to advanced settings to generate codes automatically"}
+            {hasAdvancedSettings
+              ? 'Configure advanced code settings (code will be generated automatically)'
+              : 'Switch to advanced settings to generate codes automatically'}
           </p>
         </div>
 
@@ -217,10 +233,14 @@ const Code: React.FC<CodeProps> = () => {
                 </label>
                 <input
                   type="text"
-                  {...register('codeSettings.prefix', { 
-                    required: hasAdvancedSettings 
+                  {...register('codeSettings.prefix', {
+                    required: hasAdvancedSettings,
                   })}
-                  className={`w-full border ${!codeSettingsPrefix && hasAdvancedSettings ? 'border-red-300' : 'border-gray-300'} px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+                  className={`w-full border ${
+                    !codeSettingsPrefix && hasAdvancedSettings
+                      ? 'border-red-300'
+                      : 'border-gray-300'
+                  } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
                   placeholder="ABC"
                 />
                 {!codeSettingsPrefix && hasAdvancedSettings && (
@@ -233,10 +253,14 @@ const Code: React.FC<CodeProps> = () => {
                 </label>
                 <input
                   type="text"
-                  {...register('codeSettings.postfix', { 
-                    required: hasAdvancedSettings 
+                  {...register('codeSettings.postfix', {
+                    required: hasAdvancedSettings,
                   })}
-                  className={`w-full border ${!codeSettingsPostfix && hasAdvancedSettings ? 'border-red-300' : 'border-gray-300'} px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+                  className={`w-full border ${
+                    !codeSettingsPostfix && hasAdvancedSettings
+                      ? 'border-red-300'
+                      : 'border-gray-300'
+                  } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
                   placeholder="XYZ"
                 />
                 {!codeSettingsPostfix && hasAdvancedSettings && (
@@ -252,10 +276,14 @@ const Code: React.FC<CodeProps> = () => {
                 </label>
                 <input
                   type="number"
-                  {...register('codeSettings.length', { 
-                    required: hasAdvancedSettings 
+                  {...register('codeSettings.length', {
+                    required: hasAdvancedSettings,
                   })}
-                  className={`w-full border ${!codeSettingsLength && hasAdvancedSettings ? 'border-red-300' : 'border-gray-300'} px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+                  className={`w-full border ${
+                    !codeSettingsLength && hasAdvancedSettings
+                      ? 'border-red-300'
+                      : 'border-gray-300'
+                  } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
                   placeholder="11"
                 />
                 {!codeSettingsLength && hasAdvancedSettings && (
@@ -268,10 +296,14 @@ const Code: React.FC<CodeProps> = () => {
                 </label>
                 <input
                   type="text"
-                  {...register('codeSettings.pattern', { 
-                    required: hasAdvancedSettings 
+                  {...register('codeSettings.pattern', {
+                    required: hasAdvancedSettings,
                   })}
-                  className={`w-full border ${!codeSettingsPattern && hasAdvancedSettings ? 'border-red-300' : 'border-gray-300'} px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+                  className={`w-full border ${
+                    !codeSettingsPattern && hasAdvancedSettings
+                      ? 'border-red-300'
+                      : 'border-gray-300'
+                  } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
                   placeholder="#125###120"
                 />
                 {!codeSettingsPattern && hasAdvancedSettings && (
@@ -287,10 +319,14 @@ const Code: React.FC<CodeProps> = () => {
                 </label>
                 <input
                   type="text"
-                  {...register('codeSettings.characterSet', { 
-                    required: hasAdvancedSettings 
+                  {...register('codeSettings.characterSet', {
+                    required: hasAdvancedSettings,
                   })}
-                  className={`w-full border ${!codeSettingsCharacterSet && hasAdvancedSettings ? 'border-red-300' : 'border-gray-300'} px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+                  className={`w-full border ${
+                    !codeSettingsCharacterSet && hasAdvancedSettings
+                      ? 'border-red-300'
+                      : 'border-gray-300'
+                  } px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
                   placeholder="01223456789abcdefghijklmnopirstuvwxyz"
                 />
                 {!codeSettingsCharacterSet && hasAdvancedSettings && (

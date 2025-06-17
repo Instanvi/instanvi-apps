@@ -4,12 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Check, ChevronDown, AlertCircle } from 'lucide-react';
 
-interface AudienceProps {
-  // Add any props if needed
-}
-
-const Audience: React.FC<AudienceProps> = () => {
-  const { register, watch, setValue, formState: { errors } } = useFormContext();
+const Audience: React.FC = () => {
+  const {
+    register,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
   const autoAddUsers = watch('autoAddUsers') || false;
   const canJoinOnce = watch('canJoinOnce') || false;
   const audienceSegment = watch('audience.segment');
@@ -18,11 +19,11 @@ const Audience: React.FC<AudienceProps> = () => {
   // Reactive validation
   useEffect(() => {
     const errors: string[] = [];
-    
+
     if (!audienceSegment) {
-      errors.push("Audience segment is required");
+      errors.push('Audience segment is required');
     }
-    
+
     setValidationErrors(errors);
   }, [audienceSegment]);
 
@@ -30,7 +31,7 @@ const Audience: React.FC<AudienceProps> = () => {
   const validateAudienceTab = () => {
     return validationErrors.length === 0;
   };
-  
+
   // Add a hidden validation button that can be triggered from the parent
   useEffect(() => {
     // Create a hidden button for validation
@@ -38,9 +39,9 @@ const Audience: React.FC<AudienceProps> = () => {
     validateButton.id = 'validate-audience';
     validateButton.style.display = 'none';
     validateButton.onclick = () => validateAudienceTab();
-    
+
     document.body.appendChild(validateButton);
-    
+
     return () => {
       if (document.body.contains(validateButton)) {
         document.body.removeChild(validateButton);
@@ -57,11 +58,15 @@ const Audience: React.FC<AudienceProps> = () => {
         <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-md">
           <div className="flex items-center mb-2">
             <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
-            <h4 className="text-red-600 font-medium">Please fix the following errors:</h4>
+            <h4 className="text-red-600 font-medium">
+              Please fix the following errors:
+            </h4>
           </div>
           <ul className="list-disc pl-5 text-red-500 text-sm">
             {validationErrors.map((error, index) => (
-              <li key={index} className="audience-error">{error}</li>
+              <li key={index} className="audience-error">
+                {error}
+              </li>
             ))}
           </ul>
         </div>
@@ -76,7 +81,9 @@ const Audience: React.FC<AudienceProps> = () => {
           <div className="relative flex-1 w-1/2">
             <select
               {...register('audience.segment')}
-              className={`w-full appearance-none border ${!audienceSegment ? 'border-red-300' : 'border-gray-300'} bg-white px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+              className={`w-full appearance-none border ${
+                !audienceSegment ? 'border-red-300' : 'border-gray-300'
+              } bg-white px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
             >
               <option value="">Select Audience segment</option>
               <option value="all">All Customers</option>

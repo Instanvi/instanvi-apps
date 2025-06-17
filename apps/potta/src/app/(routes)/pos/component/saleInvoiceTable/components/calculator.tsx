@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -9,13 +10,17 @@ const Calculator: React.FC = () => {
   const appendToInput = (value: string) => {
     if (input) {
       if (
-        value === '.' && input.split(/[\+\-\*\/]/).pop()?.includes('.')
+        value === '.' &&
+        input
+          .split(/[\+\-\*\/]/)
+          .pop()
+          ?.includes('.')
       ) {
         return;
       }
     }
     setInput((prev) => prev + value);
-    
+
     // Try to calculate the result as the user types
     try {
       const currentExpression = input + value;
@@ -49,7 +54,7 @@ const Calculator: React.FC = () => {
     navigator.clipboard
       .writeText(textToCopy)
       .then(() => {
-        toast.success('Copied to clipboard!')
+        toast.success('Copied to clipboard!');
       })
       .catch((err) => {
         console.error('Failed to copy: ', err);
@@ -89,7 +94,7 @@ const Calculator: React.FC = () => {
             className="w-full h-16 text-right text-2xl p-2 bg-gray-50"
             placeholder="Enter calculation"
           />
-          
+
           {/* Display result */}
           <input
             type="text"
@@ -98,9 +103,8 @@ const Calculator: React.FC = () => {
             className="w-full h-20 text-right text-4xl font-bold p-2"
             placeholder="Result"
           />
-          
+
           {/* Copy button - smaller and positioned to the right */}
-         
         </div>
 
         {/* Operator Buttons Row */}

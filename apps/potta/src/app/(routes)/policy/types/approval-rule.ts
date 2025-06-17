@@ -16,7 +16,7 @@ export enum ApproverActionType {
 }
 
 export enum ApprovalMode {
-  ALL = 'all', 
+  ALL = 'all',
   ANY = 'any',
 }
 
@@ -35,13 +35,13 @@ export interface ConditionDetail {
   field: FieldType | string;
   operator: string;
   // More specific typing for the value field
-  value: 
-    | string 
-    | number 
-    | boolean 
-    | string[] 
-    | EntityReference 
-    | EntityReference[] 
+  value:
+    | string
+    | number
+    | boolean
+    | string[]
+    | EntityReference
+    | EntityReference[]
     | (string | EntityReference)[] // Add support for mixed arrays
     | null;
 }
@@ -58,8 +58,8 @@ export interface ConditionAction {
   id: string;
   type: ApproverActionType;
   mode: ApprovalMode;
-  userIds: string[];  // Keep for backward compatibility
-  users?: User[];     // Add new field for full user objects
+  userIds: string[]; // Keep for backward compatibility
+  users?: User[]; // Add new field for full user objects
 }
 
 export interface Requirements {
@@ -86,9 +86,7 @@ export interface ExtendedApprovalRule {
 }
 
 // Update SelectOption to align with EntityReference
-export interface SelectOption extends EntityReference {
-  // Any additional properties specific to SelectOption can go here
-}
+export type SelectOption = EntityReference;
 
 export enum Operator {
   IS = 'is',
@@ -114,7 +112,7 @@ export const ENTITY_FIELDS: string[] = [
   FieldType.EXPENSE_CATEGORY,
   FieldType.CUSTOMER,
   FieldType.INVENTORY_ITEM,
-  FieldType.VENDOR
+  FieldType.VENDOR,
 ];
 
 // Field configuration for UI rendering and behavior
@@ -135,46 +133,81 @@ export const FIELD_CONFIGS: Record<string, FieldConfig> = {
       Operator.LESS_THAN,
       Operator.GREATER_THAN,
       Operator.LESS_THAN_OR_EQUAL,
-      Operator.GREATER_THAN_OR_EQUAL
-    ]
+      Operator.GREATER_THAN_OR_EQUAL,
+    ],
   },
   [FieldType.DEPARTMENT]: {
     label: 'Department',
-    operators: [Operator.IS, Operator.IS_NOT, Operator.IS_ONE_OF, Operator.IS_NOT_ONE_OF],
-    isEntity: true
+    operators: [
+      Operator.IS,
+      Operator.IS_NOT,
+      Operator.IS_ONE_OF,
+      Operator.IS_NOT_ONE_OF,
+    ],
+    isEntity: true,
   },
   [FieldType.LOCATION_BRANCH]: {
     label: 'Location/Branch',
-    operators: [Operator.IS, Operator.IS_NOT, Operator.IS_ONE_OF, Operator.IS_NOT_ONE_OF],
-    isEntity: true
+    operators: [
+      Operator.IS,
+      Operator.IS_NOT,
+      Operator.IS_ONE_OF,
+      Operator.IS_NOT_ONE_OF,
+    ],
+    isEntity: true,
   },
   [FieldType.MATCHED_TO_PURCHASE_ORDER]: {
     label: 'Matched to Purchase Order',
-    operators: [Operator.EQUALS]
+    operators: [Operator.EQUALS],
   },
   [FieldType.PAYMENT_TYPE]: {
     label: 'Payment Type',
-    operators: [Operator.IS, Operator.IS_NOT, Operator.IS_ONE_OF, Operator.IS_NOT_ONE_OF],
-    isEntity: true
+    operators: [
+      Operator.IS,
+      Operator.IS_NOT,
+      Operator.IS_ONE_OF,
+      Operator.IS_NOT_ONE_OF,
+    ],
+    isEntity: true,
   },
   [FieldType.EXPENSE_CATEGORY]: {
     label: 'Expense Category',
-    operators: [Operator.IS, Operator.IS_NOT, Operator.IS_ONE_OF, Operator.IS_NOT_ONE_OF],
-    isEntity: true
+    operators: [
+      Operator.IS,
+      Operator.IS_NOT,
+      Operator.IS_ONE_OF,
+      Operator.IS_NOT_ONE_OF,
+    ],
+    isEntity: true,
   },
   [FieldType.CUSTOMER]: {
     label: 'Customer',
-    operators: [Operator.IS, Operator.IS_NOT, Operator.IS_ONE_OF, Operator.IS_NOT_ONE_OF],
-    isEntity: true
+    operators: [
+      Operator.IS,
+      Operator.IS_NOT,
+      Operator.IS_ONE_OF,
+      Operator.IS_NOT_ONE_OF,
+    ],
+    isEntity: true,
   },
   [FieldType.INVENTORY_ITEM]: {
     label: 'Inventory Item',
-    operators: [Operator.IS, Operator.IS_NOT, Operator.IS_ONE_OF, Operator.IS_NOT_ONE_OF],
-    isEntity: true
+    operators: [
+      Operator.IS,
+      Operator.IS_NOT,
+      Operator.IS_ONE_OF,
+      Operator.IS_NOT_ONE_OF,
+    ],
+    isEntity: true,
   },
   [FieldType.VENDOR]: {
     label: 'Vendor',
-    operators: [Operator.IS, Operator.IS_NOT, Operator.IS_ONE_OF, Operator.IS_NOT_ONE_OF],
-    isEntity: true
-  }
+    operators: [
+      Operator.IS,
+      Operator.IS_NOT,
+      Operator.IS_ONE_OF,
+      Operator.IS_NOT_ONE_OF,
+    ],
+    isEntity: true,
+  },
 };

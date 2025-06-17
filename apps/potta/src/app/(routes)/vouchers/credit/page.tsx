@@ -2,26 +2,24 @@
 import Box from './components/box';
 import InvoiceTableComponents from './components/table';
 
-import Link from 'next/link';
-import SliderInvoice from './components/slideNewInvoice';
-import Search from '@potta/components/search';
-import Select from '@potta/components/select';
-import Button from '@potta/components/button';
-import { useState } from 'react';
-import ModalInvoice from '@potta/app/(routes)/invoice/components/modal';
 import useGetAllInvoice from '@potta/app/(routes)/invoice/_hooks/useGetAllInvoice';
-import { v4 as uuid } from 'uuid';
-import DataGrid from './components/DataGrid';
-import CustomInput from './components/CustomInput';
+import ModalInvoice from '@potta/app/(routes)/invoice/components/modal';
+import Button from '@potta/components/button';
+import Search from '@potta/components/search';
+import Link from 'next/link';
+import { useState } from 'react';
 import CustomSelect, { IOption } from './components/CustomSelect';
+import SliderInvoice from './components/slideNewInvoice';
+import { IFilter } from './_utils/types';
+import { IInvoiceFilter } from '../../invoice/_utils/types';
 const Invoice = () => {
   const [detailsModal, setDetailsModal] = useState<boolean>(false);
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isFetching, isError, refetch } = useGetAllInvoice({
     limit: 10,
-    page,
-  });
+    page: page as number,
+  } as IInvoiceFilter);
 
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
@@ -92,8 +90,8 @@ const Invoice = () => {
       </div>
       {detailsModal ? (
         <ModalInvoice
-          open={detailsModal}
-          setOpen={(bool) => setDetailsModal(bool)}
+          isOpen={detailsModal}
+          setIsOpen={(bool) => setDetailsModal(bool)}
         />
       ) : null}
 
@@ -111,7 +109,7 @@ const Invoice = () => {
             setDetailsModal(false);
           }}
           onInvoiceDetailsOpen={() => setDetailsModal(true)}
-          onDeleteModal={() => {}}
+          onDeleteModal={() => console.log('on delete')}
         />
       </div>
     </div>

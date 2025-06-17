@@ -1,8 +1,8 @@
-'use client'
-import React, { useCallback, useState, useEffect } from "react";
-import { useDropzone } from "react-dropzone";
-import { Controller, Control } from "react-hook-form";
-import { ProductPayload } from "../_utils/validation";
+'use client';
+import React, { useCallback, useState, useEffect } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { Controller, Control } from 'react-hook-form';
+import { ProductPayload } from '../_utils/validation';
 
 // Define a type that restricts the name prop to only valid keys of ProductPayload
 type ProductPayloadKey = keyof ProductPayload;
@@ -16,9 +16,9 @@ interface ImageUploaderProps {
 // We need to use a global variable because the component may be re-rendered
 let _selectedImageFile: File | null = null;
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ 
-  control, 
-  name = "image"
+const ImageUploader: React.FC<ImageUploaderProps> = ({
+  control,
+  name = 'image',
 }) => {
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -29,37 +29,67 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     };
   }, []);
 
+  // const onDrop = useCallback((acceptedFiles: File[], onChange : (...event: any[]) => void) => {
+  //         if (acceptedFiles.length > 0) {
+  //           const file = acceptedFiles[0];
+
+  //           // Create a preview
+  //           const objectUrl = URL.createObjectURL(file);
+  //           setPreview(objectUrl);
+
+  //           // Store the file reference in the global variable
+  //           _selectedImageFile = file;
+
+  //           // Store a temporary value in the form
+  //           onChange(`__file__:${objectUrl}`);
+
+  //           console.log('File selected in ImageUploader:', file.name, file.type, file.size);
+  //           console.log('_selectedImageFile after selection:', _selectedImageFile);
+  //         }
+  //       },[])
+
   return (
     <Controller
       control={control}
       name={name}
       render={({ field: { onChange, value } }) => {
-        const onDrop = useCallback((acceptedFiles: File[]) => {
-          if (acceptedFiles.length > 0) {
-            const file = acceptedFiles[0];
-            
-            // Create a preview
-            const objectUrl = URL.createObjectURL(file);
-            setPreview(objectUrl);
-            
-            // Store the file reference in the global variable
-            _selectedImageFile = file;
-            
-            // Store a temporary value in the form
-            onChange(`__file__:${objectUrl}`);
-            
-            console.log('File selected in ImageUploader:', file.name, file.type, file.size);
-            console.log('_selectedImageFile after selection:', _selectedImageFile);
-          }
-        }, [onChange]);
+        const onDrop = useCallback(
+          (acceptedFiles: File[]) => {
+            if (acceptedFiles.length > 0) {
+              const file = acceptedFiles[0];
 
-        const { getRootProps, getInputProps, isDragActive } = useDropzone({ 
+              // Create a preview
+              const objectUrl = URL.createObjectURL(file);
+              setPreview(objectUrl);
+
+              // Store the file reference in the global variable
+              _selectedImageFile = file;
+
+              // Store a temporary value in the form
+              onChange(`__file__:${objectUrl}`);
+
+              console.log(
+                'File selected in ImageUploader:',
+                file.name,
+                file.type,
+                file.size
+              );
+              console.log(
+                '_selectedImageFile after selection:',
+                _selectedImageFile
+              );
+            }
+          },
+          [onChange]
+        );
+
+        const { getRootProps, getInputProps, isDragActive } = useDropzone({
           onDrop,
           accept: {
-            'image/*': ['.jpeg', '.jpg', '.png', '.gif']
+            'image/*': ['.jpeg', '.jpg', '.png', '.gif'],
           },
           maxSize: 5242880, // 5MB
-          maxFiles: 1
+          maxFiles: 1,
         });
 
         // Clean up preview URL when component unmounts
@@ -74,7 +104,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         // Helper function to ensure we have a valid string for the src attribute
         const getImageSrc = (): string | undefined => {
           if (preview) return preview;
-          if (typeof value === 'string' && !value.startsWith('__file__:')) return value;
+          if (typeof value === 'string' && !value.startsWith('__file__:'))
+            return value;
           if (typeof value === 'string' && value.startsWith('__file__:')) {
             return value.substring(8); // Remove the __file__: prefix to get the object URL
           }
@@ -90,19 +121,26 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
               {...getRootProps()}
             >
               <input {...getInputProps()} />
-              
+
               {imageSrc ? (
                 <div className="h-full w-full flex items-center justify-center">
-                  <img 
+                  <img
                     src={imageSrc}
-                    alt="Preview" 
-                    className="max-h-full max-w-full object-contain p-2" 
+                    alt="Preview"
+                    className="max-h-full max-w-full object-contain p-2"
                   />
                 </div>
               ) : (
                 <div className="flex justify-center">
                   <div className="text-center">
-                    <center><img src="/icons/dropzone.svg" className="h-16 w-16" alt="" /></center><br />
+                    <center>
+                      <img
+                        src="/icons/dropzone.svg"
+                        className="h-16 w-16"
+                        alt=""
+                      />
+                    </center>
+                    <br />
                     <p className="text-green-400 -mt-1">Max 5MB</p>
                     {isDragActive ? (
                       <p>Drop the image here ...</p>
@@ -124,7 +162,10 @@ export default ImageUploader;
 
 // Helper function to get the selected file from anywhere in the application
 export const getSelectedImageFile = (): File | null => {
-  console.log('getSelectedImageFile called, current value:', _selectedImageFile);
+  console.log(
+    'getSelectedImageFile called, current value:',
+    _selectedImageFile
+  );
   return _selectedImageFile;
 };
 

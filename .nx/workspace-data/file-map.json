@@ -98,7 +98,7 @@
         },
         {
           "file": "apps/potta/project.json",
-          "hash": "3406246195369534730"
+          "hash": "12142298988304767051"
         },
         {
           "file": "apps/potta/public/fonts/Outfit-Regular.ttf",
@@ -3026,7 +3026,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/policy/types/approval-rule.ts",
-          "hash": "1643879254725514464"
+          "hash": "6481449550501780820"
         },
         {
           "file": "apps/potta/src/app/(routes)/policy/utils/api.ts",
@@ -3077,7 +3077,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/component/saleInvoiceTable/components/calculator.tsx",
-          "hash": "452617885093081683",
+          "hash": "15379894761905571",
           "deps": [
             "npm:react",
             "npm:react-hot-toast"
@@ -3151,7 +3151,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/files/components/cardFiles.tsx",
-          "hash": "9675774828299553776",
+          "hash": "6846041558329796015",
           "deps": [
             "npm:react"
           ]
@@ -3277,7 +3277,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/components/imageUploader.tsx",
-          "hash": "6449546335998091102",
+          "hash": "5186708260403943171",
           "deps": [
             "npm:react",
             "npm:react-dropzone",
@@ -3308,7 +3308,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/create_product/components/units.tsx",
-          "hash": "15260422516453485261",
+          "hash": "8703280462333157059",
           "deps": [
             "npm:react"
           ]
@@ -3364,7 +3364,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/inventory/components/slides/components/update_product/components/units.tsx",
-          "hash": "15260422516453485261",
+          "hash": "10516496191208412480",
           "deps": [
             "npm:react"
           ]
@@ -3529,7 +3529,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/pos/sales/new/components/pdfview.tsx",
-          "hash": "5435690962889562003",
+          "hash": "17992532056363973929",
           "deps": [
             "npm:react"
           ]
@@ -3911,7 +3911,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/reports/page.tsx",
-          "hash": "4759049215410625922",
+          "hash": "3815728364230707997",
           "deps": [
             "npm:react",
             "npm:lucide-react",
@@ -4125,10 +4125,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/vouchers/_utils/column.ts",
-          "hash": "16044814641259153768",
-          "deps": [
-            "npm:@tanstack/react-table"
-          ]
+          "hash": "2912243548391898040"
         },
         {
           "file": "apps/potta/src/app/(routes)/vouchers/_utils/types.ts",
@@ -4253,10 +4250,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/vouchers/credit/_utils/column.ts",
-          "hash": "16044814641259153768",
-          "deps": [
-            "npm:@tanstack/react-table"
-          ]
+          "hash": "2912243548391898040"
         },
         {
           "file": "apps/potta/src/app/(routes)/vouchers/credit/_utils/types.ts",
@@ -4365,7 +4359,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/vouchers/credit/new/components/pdfview.tsx",
-          "hash": "17812588907247062484",
+          "hash": "3994259939144601235",
           "deps": [
             "npm:react"
           ]
@@ -4410,11 +4404,10 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/vouchers/credit/page.tsx",
-          "hash": "1377292963432330601",
+          "hash": "2833106679453597085",
           "deps": [
             "npm:next",
-            "npm:react",
-            "npm:uuid"
+            "npm:react"
           ]
         },
         {
@@ -4440,7 +4433,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/vouchers/new/components/audience.tsx",
-          "hash": "16152014041977980598",
+          "hash": "8057012078768295915",
           "deps": [
             "npm:react",
             "npm:react-hook-form",
@@ -4449,7 +4442,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/vouchers/new/components/code.tsx",
-          "hash": "1908132472450080276",
+          "hash": "13162859026568091043",
           "deps": [
             "npm:react",
             "npm:react-hook-form",
@@ -4474,7 +4467,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/vouchers/new/components/scheduling.tsx",
-          "hash": "4696248250188300564",
+          "hash": "5600546368067365104",
           "deps": [
             "npm:react",
             "npm:react-hook-form",
@@ -4646,10 +4639,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/vouchers/recurring/_utils/column.ts",
-          "hash": "16044814641259153768",
-          "deps": [
-            "npm:@tanstack/react-table"
-          ]
+          "hash": "2912243548391898040"
         },
         {
           "file": "apps/potta/src/app/(routes)/vouchers/recurring/_utils/types.ts",
@@ -4752,7 +4742,7 @@
         },
         {
           "file": "apps/potta/src/app/(routes)/vouchers/recurring/new/components/pdfview.tsx",
-          "hash": "5216228965635152479",
+          "hash": "3111887184814449696",
           "deps": [
             "npm:react"
           ]
@@ -4808,7 +4798,7 @@
         },
         {
           "file": "apps/potta/src/app/charts/barchart.tsx",
-          "hash": "11856177588616898441",
+          "hash": "18259408435406336917",
           "deps": [
             "npm:react",
             "npm:next",
@@ -4922,13 +4912,13 @@
         },
         {
           "file": "apps/potta/src/components/customDatePicker.tsx",
-          "hash": "2817424695407153099",
+          "hash": "9224455241697809587",
           "deps": [
             "npm:react",
             "npm:lucide-react",
             "npm:date-fns",
             "npm:react-hook-form",
-            "npm:@internationalized/date@3.6.0"
+            "npm:@internationalized/date"
           ]
         },
         {
@@ -4941,7 +4931,7 @@
         },
         {
           "file": "apps/potta/src/components/dropzone.tsx",
-          "hash": "7084488975616997021",
+          "hash": "17731286953264949526",
           "deps": [
             "npm:react",
             "npm:react-dropzone"
@@ -5331,7 +5321,7 @@
         },
         {
           "file": "apps/potta/src/components/table.tsx",
-          "hash": "13996615426386152972",
+          "hash": "4182347935660961042",
           "deps": [
             "npm:react",
             "npm:react-data-table-component"
@@ -5553,6 +5543,56 @@
         },
         {
           "file": "libs/ui-components/tsconfig.lib.json",
+          "hash": "1536859351713546153"
+        }
+      ],
+      "utilities": [
+        {
+          "file": "libs/utilities/.eslintrc.json",
+          "hash": "11012487992710232822"
+        },
+        {
+          "file": "libs/utilities/README.md",
+          "hash": "13228732804139331838"
+        },
+        {
+          "file": "libs/utilities/project.json",
+          "hash": "699343638286385166"
+        },
+        {
+          "file": "libs/utilities/src/index.ts",
+          "hash": "4979336273987222930"
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/axios.ts",
+          "hash": "3794232511606065549",
+          "deps": [
+            "npm:crypto-js",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "libs/utilities/src/lib/configs/env.ts",
+          "hash": "12101586654834214904"
+        },
+        {
+          "file": "libs/utilities/src/lib/helpers/index.ts",
+          "hash": "10922730425443113868",
+          "deps": [
+            "npm:crypto-js",
+            "npm:country-list-with-dial-code-and-flag"
+          ]
+        },
+        {
+          "file": "libs/utilities/src/server.ts",
+          "hash": "5519843671682787663"
+        },
+        {
+          "file": "libs/utilities/tsconfig.json",
+          "hash": "14088618039610991405"
+        },
+        {
+          "file": "libs/utilities/tsconfig.lib.json",
           "hash": "1536859351713546153"
         }
       ],
@@ -7034,6 +7074,10 @@
           "hash": "8717015038784036862"
         },
         {
+          "file": ".husky/pre-commit",
+          "hash": "9198464815746631672"
+        },
+        {
           "file": ".prettierignore",
           "hash": "14688272390704683536"
         },
@@ -7076,6 +7120,10 @@
           ]
         },
         {
+          "file": "lint-staged.config.js",
+          "hash": "5037313637532250750"
+        },
+        {
           "file": "nx.json",
           "hash": "8702058880510264654"
         },
@@ -7085,7 +7133,7 @@
         },
         {
           "file": "package.json",
-          "hash": "14312888180800614583",
+          "hash": "4525270157750401359",
           "deps": [
             "npm:@iconify/react",
             "npm:@nx/eslint",
@@ -7118,8 +7166,10 @@
             "npm:eslint-plugin-jsx-a11y",
             "npm:eslint-plugin-react",
             "npm:eslint-plugin-react-hooks",
+            "npm:husky",
             "npm:jest",
             "npm:jest-environment-jsdom",
+            "npm:lint-staged",
             "npm:nx",
             "npm:postcss",
             "npm:prettier",
@@ -7132,7 +7182,7 @@
             "npm:@heroui/date-picker",
             "npm:@heroui/react",
             "npm:@hookform/resolvers",
-            "npm:@internationalized/date@3.6.0",
+            "npm:@internationalized/date",
             "npm:@nextui-org/react",
             "npm:@radix-ui/react-avatar",
             "npm:@radix-ui/react-checkbox",
@@ -7211,56 +7261,10 @@
         {
           "file": "tsconfig.json",
           "hash": "14674814969464877296"
-        }
-      ],
-      "utilities": [
-        {
-          "file": "libs/utilities/.eslintrc.json",
-          "hash": "11012487992710232822"
         },
         {
-          "file": "libs/utilities/README.md",
-          "hash": "13228732804139331838"
-        },
-        {
-          "file": "libs/utilities/project.json",
-          "hash": "699343638286385166"
-        },
-        {
-          "file": "libs/utilities/src/index.ts",
-          "hash": "4979336273987222930"
-        },
-        {
-          "file": "libs/utilities/src/lib/configs/axios.ts",
-          "hash": "3794232511606065549",
-          "deps": [
-            "npm:crypto-js",
-            "npm:axios"
-          ]
-        },
-        {
-          "file": "libs/utilities/src/lib/configs/env.ts",
-          "hash": "12101586654834214904"
-        },
-        {
-          "file": "libs/utilities/src/lib/helpers/index.ts",
-          "hash": "10922730425443113868",
-          "deps": [
-            "npm:crypto-js",
-            "npm:country-list-with-dial-code-and-flag"
-          ]
-        },
-        {
-          "file": "libs/utilities/src/server.ts",
-          "hash": "5519843671682787663"
-        },
-        {
-          "file": "libs/utilities/tsconfig.json",
-          "hash": "14088618039610991405"
-        },
-        {
-          "file": "libs/utilities/tsconfig.lib.json",
-          "hash": "1536859351713546153"
+          "file": "yarn.lock",
+          "hash": "15574765268537927410"
         }
       ],
       "core": [

@@ -13,10 +13,6 @@ import {
 import { Button } from '@potta/components/shadcn/button';
 import { cn } from '@potta/lib/utils';
 
-interface SchedulingProps {
-  // Add any props if needed
-}
-
 type DaySchedule = {
   day: string;
   startTime?: string;
@@ -48,26 +44,26 @@ const daysOfWeek = [
 // Time format validation regex - matches formats like "09:00 AM", "9:00 PM", "12:30 AM"
 const timeFormatRegex = /^(0?[1-9]|1[0-2]):[0-5][0-9]\s?(AM|PM|am|pm)$/;
 
-const Scheduling: React.FC<SchedulingProps> = () => {
+const Scheduling: React.FC = () => {
   // Properly type the form context
-  const { 
-    register, 
-    watch, 
-    setValue, 
-    getValues, 
-    unregister, 
-    formState: { errors }, 
-    setError, 
-    clearErrors 
+  const {
+    register,
+    watch,
+    setValue,
+    getValues,
+    unregister,
+    formState: { errors },
+    setError,
+    clearErrors,
   } = useFormContext<SchedulingFormValues>();
-  
+
   const programNeverEnds = watch('scheduling.neverEnds') || false;
   const validDuringSpecificDays = watch('scheduling.specificDaysOnly') || false;
 
   // Initialize selectedDays from form data or with default empty array
   const [selectedDays, setSelectedDays] = useState<DaySchedule[]>([]);
   const [selectedDay, setSelectedDay] = useState<string>('');
-  const [timeErrors, setTimeErrors] = useState<{[key: string]: string}>({});
+  const [timeErrors, setTimeErrors] = useState<{ [key: string]: string }>({});
 
   // Date state for date pickers
   const startDate = watch('scheduling.programStartDate') || undefined;
@@ -94,36 +90,40 @@ const Scheduling: React.FC<SchedulingProps> = () => {
   const validateDates = () => {
     // Clear previous errors
     clearErrors(['scheduling.programStartDate', 'scheduling.programEndDate']);
-    
+
     // Validate start date exists
     if (!startDate) {
       setError('scheduling.programStartDate', {
         type: 'required',
-        message: 'Program start date is required'
+        message: 'Program start date is required',
       });
       return false;
     }
-    
+
     // Validate end date if program doesn't never end
     if (!programNeverEnds) {
       if (!endDate) {
         setError('scheduling.programEndDate', {
           type: 'required',
-          message: 'Program end date is required when program has an end date'
+          message: 'Program end date is required when program has an end date',
         });
         return false;
       }
-      
+
       // Validate end date is after start date
-      if (startDate && endDate && !isAfter(new Date(endDate), new Date(startDate))) {
+      if (
+        startDate &&
+        endDate &&
+        !isAfter(new Date(endDate), new Date(startDate))
+      ) {
         setError('scheduling.programEndDate', {
           type: 'validate',
-          message: 'End date must be after start date'
+          message: 'End date must be after start date',
         });
         return false;
       }
     }
-    
+
     return true;
   };
 
@@ -135,11 +135,11 @@ const Scheduling: React.FC<SchedulingProps> = () => {
     if (!validateTimeFormat(startTime) || !validateTimeFormat(endTime)) {
       return false;
     }
-    
+
     try {
       const start = parse(startTime, 'h:mm a', new Date());
       const end = parse(endTime, 'h:mm a', new Date());
-      
+
       return isValid(start) && isValid(end) && isAfter(end, start);
     } catch (error) {
       return false;
@@ -172,9 +172,9 @@ const Scheduling: React.FC<SchedulingProps> = () => {
 
   const removeDaySchedule = (day: string) => {
     const updatedDays = selectedDays.filter((schedule) => schedule.day !== day);
-    
+
     // Clear any errors for this day
-    const newTimeErrors = {...timeErrors};
+    const newTimeErrors = { ...timeErrors };
     delete newTimeErrors[`${day}-start`];
     delete newTimeErrors[`${day}-end`];
     delete newTimeErrors[`${day}-range`];
@@ -195,45 +195,48 @@ const Scheduling: React.FC<SchedulingProps> = () => {
     const updatedSchedules = [...selectedDays];
     const schedule = updatedSchedules[index];
     updatedSchedules[index] = { ...schedule, [field]: value };
-    
+
     // Validate time format if updating time fields
-    const newTimeErrors = {...timeErrors};
+    const newTimeErrors = { ...timeErrors };
     const dayKey = schedule.day;
-    
+
     if (field === 'startTime') {
       if (!validateTimeFormat(value as string)) {
-        newTimeErrors[`${dayKey}-start`] = 'Invalid time format (e.g. 09:00 AM)';
+        newTimeErrors[`${dayKey}-start`] =
+          'Invalid time format (e.g. 09:00 AM)';
       } else {
         delete newTimeErrors[`${dayKey}-start`];
-        
+
         // Check time range if both times are valid
         if (schedule.endTime && validateTimeFormat(schedule.endTime)) {
           if (!validateTimeRange(value as string, schedule.endTime)) {
-            newTimeErrors[`${dayKey}-range`] = 'End time must be after start time';
+            newTimeErrors[`${dayKey}-range`] =
+              'End time must be after start time';
           } else {
             delete newTimeErrors[`${dayKey}-range`];
           }
         }
       }
     }
-    
+
     if (field === 'endTime') {
       if (!validateTimeFormat(value as string)) {
         newTimeErrors[`${dayKey}-end`] = 'Invalid time format (e.g. 05:00 PM)';
       } else {
         delete newTimeErrors[`${dayKey}-end`];
-        
+
         // Check time range if both times are valid
         if (schedule.startTime && validateTimeFormat(schedule.startTime)) {
           if (!validateTimeRange(schedule.startTime, value as string)) {
-            newTimeErrors[`${dayKey}-range`] = 'End time must be after start time';
+            newTimeErrors[`${dayKey}-range`] =
+              'End time must be after start time';
           } else {
             delete newTimeErrors[`${dayKey}-range`];
           }
         }
       }
     }
-    
+
     setTimeErrors(newTimeErrors);
 
     // Update local state
@@ -247,9 +250,9 @@ const Scheduling: React.FC<SchedulingProps> = () => {
     const updatedSchedules = [...selectedDays];
     const currentSchedule = updatedSchedules[index];
     const newAllDayValue = !currentSchedule.allDay;
-    
+
     // Clear any time errors for this day
-    const newTimeErrors = {...timeErrors};
+    const newTimeErrors = { ...timeErrors };
     delete newTimeErrors[`${currentSchedule.day}-start`];
     delete newTimeErrors[`${currentSchedule.day}-end`];
     delete newTimeErrors[`${currentSchedule.day}-range`];
@@ -308,12 +311,12 @@ const Scheduling: React.FC<SchedulingProps> = () => {
   const hasError = (path: string): boolean => {
     const parts = path.split('.');
     let current: any = errors;
-    
+
     for (const part of parts) {
       if (!current || !current[part]) return false;
       current = current[part];
     }
-    
+
     return true;
   };
 
@@ -321,12 +324,12 @@ const Scheduling: React.FC<SchedulingProps> = () => {
   const getErrorMessage = (path: string): string => {
     const parts = path.split('.');
     let current: any = errors;
-    
+
     for (const part of parts) {
       if (!current || !current[part]) return '';
       current = current[part];
     }
-    
+
     return current.message || '';
   };
 
@@ -381,7 +384,8 @@ const Scheduling: React.FC<SchedulingProps> = () => {
           <div className="flex items-start space-x-4">
             <div className="flex-1">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Program Ends Datetime {!programNeverEnds && <span className="text-red-500">*</span>}
+                Program Ends Datetime{' '}
+                {!programNeverEnds && <span className="text-red-500">*</span>}
               </label>
               <Popover>
                 <PopoverTrigger asChild>
@@ -398,7 +402,9 @@ const Scheduling: React.FC<SchedulingProps> = () => {
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {endDate && !programNeverEnds
                       ? format(new Date(endDate), 'PPP')
-                      : programNeverEnds ? 'Never' : 'Select end date'}
+                      : programNeverEnds
+                      ? 'Never'
+                      : 'Select end date'}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -424,28 +430,28 @@ const Scheduling: React.FC<SchedulingProps> = () => {
               )}
             </div>
           </div>
-            <div className="flex items-center ">
-              <label className="mr-2 text-sm text-gray-700">
-                Program Never ends
-              </label>
-              <div
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                  programNeverEnds ? 'bg-green-500' : 'bg-gray-200'
+          <div className="flex items-center ">
+            <label className="mr-2 text-sm text-gray-700">
+              Program Never ends
+            </label>
+            <div
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                programNeverEnds ? 'bg-green-500' : 'bg-gray-200'
+              }`}
+              onClick={handleProgramNeverEndsToggle}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  programNeverEnds ? 'translate-x-6' : 'translate-x-1'
                 }`}
-                onClick={handleProgramNeverEndsToggle}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    programNeverEnds ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </div>
-              <input
-                type="checkbox"
-                {...register('scheduling.neverEnds')}
-                className="hidden"
               />
             </div>
+            <input
+              type="checkbox"
+              {...register('scheduling.neverEnds')}
+              className="hidden"
+            />
+          </div>
         </div>
 
         {/* Valid during specific days */}
@@ -485,8 +491,10 @@ const Scheduling: React.FC<SchedulingProps> = () => {
                     value={selectedDay}
                     onChange={(e) => setSelectedDay(e.target.value)}
                     className={cn(
-                      "w-full appearance-none border bg-white border-gray-300 px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500",
-                      hasError('scheduling.validDays') && selectedDays.length === 0 && "border-red-500"
+                      'w-full appearance-none border bg-white border-gray-300 px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500',
+                      hasError('scheduling.validDays') &&
+                        selectedDays.length === 0 &&
+                        'border-red-500'
                     )}
                   >
                     <option value="">select day</option>
@@ -514,13 +522,14 @@ const Scheduling: React.FC<SchedulingProps> = () => {
                   Add
                 </button>
               </div>
-              
-              {hasError('scheduling.validDays') && selectedDays.length === 0 && (
-                <p className="mt-1 text-sm text-red-500 flex items-center">
-                  <AlertCircle className="h-3 w-3 mr-1" />
-                  {getErrorMessage('scheduling.validDays')}
-                </p>
-              )}
+
+              {hasError('scheduling.validDays') &&
+                selectedDays.length === 0 && (
+                  <p className="mt-1 text-sm text-red-500 flex items-center">
+                    <AlertCircle className="h-3 w-3 mr-1" />
+                    {getErrorMessage('scheduling.validDays')}
+                  </p>
+                )}
 
               {selectedDays.length > 0 && (
                 <div className="mt-4">
@@ -554,8 +563,9 @@ const Scheduling: React.FC<SchedulingProps> = () => {
                               }
                               placeholder="e.g. 09:00 AM"
                               className={cn(
-                                "w-full border border-gray-300 px-3 py-1 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500",
-                                timeErrors[`${schedule.day}-start`] && "border-red-500"
+                                'w-full border border-gray-300 px-3 py-1 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500',
+                                timeErrors[`${schedule.day}-start`] &&
+                                  'border-red-500'
                               )}
                             />
                             {timeErrors[`${schedule.day}-start`] && (
@@ -583,8 +593,9 @@ const Scheduling: React.FC<SchedulingProps> = () => {
                               }
                               placeholder="e.g. 05:00 PM"
                               className={cn(
-                                "w-full border border-gray-300 px-3 py-1 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500",
-                                timeErrors[`${schedule.day}-end`] && "border-red-500"
+                                'w-full border border-gray-300 px-3 py-1 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500',
+                                timeErrors[`${schedule.day}-end`] &&
+                                  'border-red-500'
                               )}
                             />
                             {timeErrors[`${schedule.day}-end`] && (
@@ -623,8 +634,10 @@ const Scheduling: React.FC<SchedulingProps> = () => {
                       </div>
                     </div>
                   ))}
-                  
-                  {Object.keys(timeErrors).some(key => key.endsWith('-range')) && (
+
+                  {Object.keys(timeErrors).some((key) =>
+                    key.endsWith('-range')
+                  ) && (
                     <div className="mt-2 p-2 bg-red-50 border border-red-100 rounded-md">
                       <p className="text-sm text-red-500 flex items-center">
                         <AlertCircle className="h-4 w-4 mr-1" />

@@ -531,8 +531,8 @@
 //                 value={searchQuery}
 //                 onChange={(e: any) => setSearchQuery(e.target.value)}
 //                 className="pl-10 pr-10 py-4 w-full border border-gray-200 rounded-[2px] outline-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
-   "
-//               />
+//    "
+// //               />
 //               {searchQuery && (
 //                 <button
 //                   onClick={handleClearSearch}
@@ -713,7 +713,6 @@ import RootLayout from '../layout';
 import BudgetUtilizationReport from './components/disbursementReports/budgetUtilizationReport';
 import Slider from '@potta/components/slideover';
 import PaymentSummaryReport from './components/disbursementReports/paymentSummaryReport';
-
 
 // Define TypeScript interfaces for our data structures
 interface Report {
@@ -1172,30 +1171,44 @@ const formatDate = (dateString: string): string => {
 
 // Payment Summary Report Component
 
-
 // Report View Content Component
-const ReportViewContent: React.FC<{ report: Report | null; data: ReportData }> = ({ report, data }) => {
+const ReportViewContent: React.FC<{
+  report: Report | null;
+  data: ReportData;
+}> = ({ report, data }) => {
   if (!report) return null;
 
-  const categoryInfo = reportCategories.find(cat => cat.id === report.category);
+  const categoryInfo = reportCategories.find(
+    (cat) => cat.id === report.category
+  );
   const icon = categoryInfo?.icon || <FileText className="h-5 w-5" />;
 
   // Determine which report component to render based on the report dataType
   const renderReportContent = () => {
     if (report.dataType === 'payment') {
-      return <PaymentSummaryReport reportPeriod={data.reportPeriod} payments={data.payments} kpis={data.paymentKpis} />;
+      return (
+        <PaymentSummaryReport
+          reportPeriod={data.reportPeriod}
+          payments={data.payments}
+          kpis={data.paymentKpis}
+        />
+      );
     } else if (report.dataType === 'budget') {
       // Use the imported BudgetUtilizationReport component
-      return <BudgetUtilizationReport
-        reportPeriod={data.reportPeriod}
-        budgets={data.budgets}
-        kpis={data.budgetKpis}
-      />;
+      return (
+        <BudgetUtilizationReport
+          reportPeriod={data.reportPeriod}
+          budgets={data.budgets}
+          kpis={data.budgetKpis}
+        />
+      );
     } else {
       // Default placeholder for other report types
       return (
         <div className="border rounded-lg p-4 bg-gray-50 min-h-[300px] flex items-center justify-center">
-          <p className="text-gray-400">Report content would be displayed here</p>
+          <p className="text-gray-400">
+            Report content would be displayed here
+          </p>
         </div>
       );
     }
@@ -1203,15 +1216,9 @@ const ReportViewContent: React.FC<{ report: Report | null; data: ReportData }> =
 
   return (
     <div className="w-full min-h-[87.5vh] max-w-5xl ">
-      <div className="flex items-center mb-6">
-       
-      </div>
+      <div className="flex items-center mb-6"></div>
 
-      <div className="mb-6">
-        {renderReportContent()}
-      </div>
-
-
+      <div className="mb-6">{renderReportContent()}</div>
     </div>
   );
 };
@@ -1339,7 +1346,9 @@ const ReportsPage: React.FC = () => {
             </button>
           </div>
           <div className="flex items-center text-green-600 text-sm font-medium">
-            <span className="opacity-0 group-hover:opacity-100 transition-opacity">View Report</span>
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+              View Report
+            </span>
             <ChevronRight className="h-4 w-4 ml-1" />
           </div>
         </CardFooter>
@@ -1455,7 +1464,8 @@ const ReportsPage: React.FC = () => {
         {searchQuery.trim() !== '' && (
           <div className="mb-4 text-sm text-gray-500">
             Found {filteredReports.length} report
-            {filteredReports.length !== 1 ? 's' : ''} matching &apos;{searchQuery}
+            {filteredReports.length !== 1 ? 's' : ''} matching &apos;
+            {searchQuery}
             &apos;
             {isGlobalSearch && ` across all categories`}
             {!isGlobalSearch &&
@@ -1474,10 +1484,14 @@ const ReportsPage: React.FC = () => {
             </h1>
           </div>
           {activeTab === 'frequent' && (
-            <p className="text-sm text-gray-500 mt-1">Your most commonly used reports</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Your most commonly used reports
+            </p>
           )}
           {activeTab === 'all' && (
-            <p className="text-sm text-gray-500 mt-1">All available reports across categories</p>
+            <p className="text-sm text-gray-500 mt-1">
+              All available reports across categories
+            </p>
           )}
         </div>
 
@@ -1509,9 +1523,7 @@ const ReportsPage: React.FC = () => {
             {/* Reports grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredReports.map((report, index) => (
-                <div key={report.id}>
-                  {renderReportCard(report)}
-                </div>
+                <div key={report.id}>{renderReportCard(report)}</div>
               ))}
             </div>
           </ScrollShadow>
@@ -1548,8 +1560,8 @@ const ReportsPage: React.FC = () => {
           }
 
           .custom-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
           }
         `}</style>
       </div>

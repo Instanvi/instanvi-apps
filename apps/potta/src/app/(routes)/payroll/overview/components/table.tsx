@@ -1,5 +1,5 @@
 'use client';
-import DataGrid from '@potta/app/(routes)/account_receivables/components/DataGrid';
+import DataGrid from '@potta/app/(routes)/account_receivables/invoice/components/DataGrid';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { employeeApi } from '../../utils/api';
@@ -19,6 +19,8 @@ const PayrollTable = () => {
           limit: 100,
           sortBy: ['createdAt:DESC'],
         });
+        console.log('Employee API response:', response);
+        console.log('Employee API response.data:', response.data);
         return response.data;
       } catch (error) {
         console.error('Error fetching employees:', error);
@@ -134,7 +136,11 @@ const PayrollTable = () => {
 
   // Process employee data for the table
   const processedData = React.useMemo(() => {
+    console.log('Employees response:', employeesResponse);
+    console.log('Employees data:', employeesResponse?.data);
+
     if (!employeesResponse?.data || employeesResponse.data.length === 0) {
+      console.log('No employees data found');
       return [];
     }
 
@@ -326,10 +332,14 @@ const PayrollTable = () => {
         hasTimesheetData: actualTotalHours > 0,
       };
     });
+
+    console.log('Processed data length:', processedData.length);
+    return processedData;
   }, [employeesResponse, roleMap, timesheetData]);
 
   // Filter data based on search query
   const filteredData = React.useMemo(() => {
+    console.log('Filtered data length:', processedData.length);
     if (!searchQuery.trim()) return processedData;
 
     const query = searchQuery.toLowerCase();
@@ -459,7 +469,7 @@ const PayrollTable = () => {
       {isLoading ? (
         <TableSkeleton />
       ) : (
-        <DataGrid data={filteredData} column={columns} loading={false} />
+        <DataGrid data={filteredData} columns={columns} loading={false} />
       )}
     </div>
   );

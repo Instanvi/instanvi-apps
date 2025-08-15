@@ -8,7 +8,7 @@ import { Bell, Inbox } from 'lucide-react'; // Import the icons
 import PosCustomersBox from './boxes/PosCustomersBox';
 import PosSalesBox from './boxes/PosSalesBox';
 import { ContextData } from '../../../../components/context';
-import VouchersBox from '../../vouchers/components/boxVouchers';
+import VouchersBox from '../../account_receivables/vouchers/components/boxVouchers';
 import InvoiceBox from './boxes/InvoiceBox';
 import VendorsBox from './boxes/PosVendorsBox';
 import AppLauncher from '../../../../components/AppLauncher';
@@ -104,7 +104,11 @@ const routesWithoutBlueBackground = [
   // Add more routes here that don't need the blue background
 ];
 
-export default function Navbar() {
+export default function Navbar({
+  showChatAI = false,
+}: {
+  showChatAI?: boolean;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const context = useContext(ContextData);
@@ -195,14 +199,20 @@ export default function Navbar() {
     ) {
       return false;
     }
+    if (
+      str[1] === 'account_receivables' &&
+      str[2] === 'vouchers' &&
+      str[3] === 'new'
+    ) {
+      return false;
+    }
+    if (str[1] === 'account_receivables' && str[2] === 'vouchers') {
+      return true;
+    }
     if (str[1] === 'pos' && str[2] === 'sales' && str[3] === 'new') {
       return false;
     }
-    if (
-      (str[1] === 'pos' || str[1] === 'account_receivables') &&
-      str[2] === 'sales'
-    )
-      return true;
+    if (str[1] === 'pos' && str[2] === 'sales') return true;
     if (str[1] === 'account_receivables' && str[2] === 'invoice') {
       return true;
     }
@@ -259,6 +269,13 @@ export default function Navbar() {
     }
     // Special case for /pos/new route
     if (str[1] === 'pos' && str[2] === 'sales' && str[3] === 'new') {
+      return 'New Sales ';
+    }
+    if (
+      str[1] === 'account_receivables' &&
+      str[2] === 'sales_receipts' &&
+      str[3] === 'new'
+    ) {
       return 'New Sales Receipt';
     }
     if (str[1] === 'expenses' && str[2] === 'bills' && str[3] === 'new') {
@@ -282,12 +299,22 @@ export default function Navbar() {
     if (str[1] === 'account_receivables' && str[2] === undefined) {
       return 'AR';
     }
-
+    if (str[1] === 'account_receivables' && str[2] === 'sales_receipts') {
+      return 'Sales Receipts';
+    }
     if (
-      (str[1] === 'account_receivables' && str[2] === 'invoice') ||
+      str[1] === 'account_receivables' &&
+      str[2] === 'invoice' &&
       str[3] === 'new'
     ) {
       return 'New Invoice';
+    }
+    if (
+      str[1] === 'account_receivables' &&
+      str[2] === 'vouchers' &&
+      str[3] === 'new'
+    ) {
+      return 'New Voucher';
     }
 
     if (str[1] === 'reports' && str[2] === undefined) {
@@ -353,9 +380,13 @@ export default function Navbar() {
   const bgColorClass = getBackgroundColorClass();
 
   return (
-    <nav className={`w-full sticky z-20 top-0 ${bgColorClass} space-y-10`}>
+    <nav
+      className={`w-full sticky z-20 top-0 ${
+        pathname.includes('reports') ? 'border-b border-gray-300' : ''
+      } ${bgColorClass}  space-y-10`}
+    >
       <div className={`flex justify-between ${bgColorClass}`}>
-        <div className="flex ml-16 items-start gap-20 py-4">
+        <div className={`flex  ml-16 items-start gap-20 py-4`}>
           <h1 className="font-medium text-3xl text-start capitalize">
             {getTitle()}
           </h1>
@@ -377,7 +408,7 @@ export default function Navbar() {
 
       {/* Render the route-specific box component */}
       {shouldShowBox() && BoxComponent && (
-        <div className="ml-14 pb-10">
+        <div className={`${showChatAI ? 'ml-5' : 'ml-14'} pb-10`}>
           <BoxComponent />
         </div>
       )}

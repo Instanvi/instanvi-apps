@@ -10,7 +10,20 @@ export type ReportCategoryId =
   | 'expense'
   | 'inventory'
   | 'tax'
-  | 'vendor';
+  | 'vendor'
+  | 'revenue_analytics'
+  | 'expense_analytics'
+  | 'financial_analytics'
+  | 'human_capital'
+  | 'sales_inventory'
+  | 'budget_analytics'
+  | 'billings'
+  | 'bookings'
+  | 'cashflow'
+  | 'headcount'
+  | 'revenue'
+  | 'sales'
+  | 'api_debug';
 
 export interface Report {
   id: string;
@@ -20,11 +33,22 @@ export interface Report {
   dataType?: 'payment' | 'budget';
 }
 
+export interface ReportSubmenu {
+  id: string;
+  label: string;
+  chartKey: string;
+  factName?: string;
+  metrics?: string[];
+  dimensions?: string[];
+  module?: 'finance' | 'human_capital' | 'sales_inventory';
+}
+
 export interface ReportCategory {
   id: ReportCategoryId;
   label: string;
   icon: React.ReactNode;
   folderName?: string;
+  submenus?: ReportSubmenu[];
 }
 
 export interface ReportDataType {

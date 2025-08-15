@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { LuTicket } from 'react-icons/lu';
 import { FileText } from 'lucide-react';
+import { svgIcons } from '@potta/components/svg_icons/IconsSvg';
 const Sidebarsinvoicing = () => {
   const pathname = usePathname();
   const string = pathname;
@@ -29,7 +30,7 @@ const Sidebarsinvoicing = () => {
       collapsed={context?.toggle}
       toggled={true}
       breakPoint="md"
-      className=" relative bg-blue-500  h-[100vh] z-[100]  side "
+      className=" relative !bg-white  h-[100vh] z-[100]  side "
     >
       <Menu className="relative h-[76vh]" closeOnClick>
         <MenuItem
@@ -49,23 +50,17 @@ const Sidebarsinvoicing = () => {
           }
           className="mt-8  "
           href="/account_receivables"
-          icon={
-            str[1] == 'account_receivables' && str[2] == undefined ? (
-              <img src="/images/sideExpensesIcons/white/1.svg" />
-            ) : (
-              <img src="/images/sideDashboardIcons/schedule.svg" />
-            )
-          }
+          icon={svgIcons.dashboard(
+            str[1] == 'account_receivables' && str[2] == undefined
+              ? 'white'
+              : '#6b7280'
+          )}
         >
           {' '}
           <h3 className="text-md mt-[2px]">Dashboard</h3>{' '}
         </MenuItem>
         <MenuItem
-          active={
-            (str[2] == 'invoice' && str[3] == undefined) || str[3] == 'new'
-              ? true
-              : false
-          }
+          active={isActive('/account_receivables/invoice')}
           className="text-md"
           href="/account_receivables/invoice"
           icon={
@@ -73,9 +68,7 @@ const Sidebarsinvoicing = () => {
               icon="file-invoice-dollar"
               size={23}
               color={
-                (str[2] == 'invoice' && str[3] == undefined) || str[3] == 'new'
-                  ? 'white'
-                  : 'black'
+                isActive('/account_receivables/invoice') ? 'white' : '#6b7280'
               }
             />
           }
@@ -102,15 +95,9 @@ const Sidebarsinvoicing = () => {
           active={isActive('/account_receivables/customers')}
           className="text-md"
           href="/account_receivables/customers"
-          icon={
-            <Users
-              className={`h-6 w-6 ${
-                isActive('/account_receivables/customers')
-                  ? 'text-white'
-                  : 'text-gray-900'
-              }`}
-            />
-          }
+          icon={svgIcons.people(
+            isActive('/account_receivables/customers') ? 'white' : '#6b7280'
+          )}
         >
           <h3 className="text-lg mt-1.5">Customers</h3>
         </MenuItem>
@@ -118,14 +105,9 @@ const Sidebarsinvoicing = () => {
           active={isActive('/account_receivables/vouchers')}
           className="text-md"
           href="/account_receivables/vouchers"
-          icon={
-            <LuTicket
-              size={23}
-              color={
-                isActive('/account_receivables/vouchers') ? 'white' : 'black'
-              }
-            />
-          }
+          icon={svgIcons.ticket(
+            isActive('/account_receivables/vouchers') ? 'white' : '#6b7280'
+          )}
         >
           <h3 className="text-lg mt-1.5">Vouchers</h3>
         </MenuItem>
@@ -156,7 +138,7 @@ const Sidebarsinvoicing = () => {
               color={
                 isActive('/account_receivables/sales_receipts')
                   ? 'white'
-                  : 'black'
+                  : '#6b7280'
               }
             />
           }
@@ -183,13 +165,7 @@ const Sidebarsinvoicing = () => {
           active={isActive('/reports')}
           className="text-md"
           href="/reports"
-          icon={
-            <ChartPie
-              className={`h-6 w-6 ${
-                isActive('/reports') ? 'text-white' : 'text-gray-900'
-              }`}
-            />
-          }
+          icon={svgIcons.reports(isActive('/reports') ? 'white' : '#6b7280')}
         >
           <h3 className="text-lg mt-1.5">Reports</h3>
         </MenuItem>

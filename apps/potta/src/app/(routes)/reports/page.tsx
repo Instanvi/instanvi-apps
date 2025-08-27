@@ -11,6 +11,7 @@ import ReportChartCard from './components/ReportChartCard';
 import RootLayout from '../layout';
 import ApiDebugTest from './analytics/ApiDebugTest';
 import AnalyticsChartCard from './analytics/AnalyticsChartCard';
+import BudgetAnalyticsCard from './components/BudgetAnalyticsCard';
 import KpiCard from './components/KpiCard';
 import FPATabFilter from './components/FPATabFilter';
 import {
@@ -301,6 +302,27 @@ const ReportsPage: React.FC = () => {
           {/* Reports grid with more dummy chart cards */}
           {activeTab === 'api_debug' ? (
             <ApiDebugTest />
+          ) : activeTab === 'budget_analytics' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+              {activeTabInfo?.submenus?.map((submenu) => {
+                return (
+                  <div
+                    key={submenu.id}
+                    id={`card-${submenu.id}`}
+                    ref={(el) => {
+                      cardRefs.current[submenu.id] = el;
+                    }}
+                  >
+                    <BudgetAnalyticsCard
+                      title={submenu.label}
+                      description={`${submenu.label} budgeting and forecasting analysis`}
+                      chartType={submenu.id as any}
+                      timeGranularity={timeCycleTab.toLowerCase() as any}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           ) : [
               'revenue_analytics',
               'expense_analytics',

@@ -35,58 +35,89 @@ interface User {
 
 interface Organization {
   id: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
   name: string;
   slug: string;
-  logo: string;
-  metadata: {
-    industry: string;
+  industry: string;
+}
+
+interface Role {
+  id: string;
+  name: string;
+  permissions: {
+    GROUP: Array<{
+      name: string;
+      properties: Array<{
+        name: string;
+        actions: string[];
+      }>;
+    }>;
+    appNAME: string;
   };
 }
 
-interface Branch {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-  name: string;
-  address: string;
-  organization: Organization;
-}
-
-interface Member {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-  userId: string;
-  role: {
+interface Hierarchy {
+  position: string;
+  organization_structure: {
+    id: string;
+    structure_name: string;
+    description: string;
+    structure_type: string;
+    path: string;
+    level: number;
+    location_id: string;
+    organization_id: string;
+    max_employees: number;
+    current_employees: number;
+    budget: string;
+    is_active: boolean;
+  };
+  location: {
+    id: string;
+    location_name: string;
+    address: string;
+    longitude: string;
+    latitude: string;
+    organization_id: string;
+  };
+  department: {
     id: string;
     name: string;
-    organizationId: string;
-    branchId: string | null;
-    permissions: {
-      GROUP: Array<{
-        name: string;
-        properties: Array<{
-          name: string;
-          actions: string[];
-        }>;
-      }>;
-      appNAME: string;
-    };
+    type: string;
+    level: number;
+    path: string;
   };
-  teamId: string | null;
+  geographicalUnit: {
+    id: string;
+    geo_unit_name: string;
+    description: string;
+    organization_id: string;
+  };
+  subBusiness: {
+    id: string;
+    sub_business_name: string;
+    description: string;
+    industry: string;
+    organization_id: string;
+    max_employees: number;
+    current_employees: number;
+    annual_revenue: string;
+    established_year: number;
+    is_active: boolean;
+    website: string;
+    contact_email: string;
+    contact_phone: string;
+  };
+  assignmentType: string;
+  isActive: boolean;
 }
 
 interface WhoAmIResponse {
   user: {
     session: UserSession;
     user: User;
-    branch: Branch;
-    members: Member[];
+    organization: Organization;
+    roles: Role[];
+    hierarchy: Hierarchy;
   };
 }
 
@@ -193,15 +224,11 @@ const useGetUser = () => {
             email: 'dev@instanvi.com',
             role: 'developer',
           },
-          branch: {
-            name: 'Headquarters',
-            address: 'Quartre-etage, bonaberi, Douala',
-            organization: {
-              name: 'Instanvi Inc',
-              logo: 'https://instanvi.com/logo.png',
-            },
+          organization: {
+            name: 'Instanvi Inc',
+            logo: 'https://instanvi.com/logo.png',
           },
-          members: [],
+          roles: [],
         },
       };
 
@@ -222,11 +249,11 @@ const useGetUser = () => {
       // Extract comprehensive company and user information from the user data
       const companyInfo = {
         // Company/Organization Information
-        companyName: userData.user.branch.organization.name,
+        companyName: userData.user.organization.name,
         companyEmail: userData.user.user.email,
-        companyAddress: userData.user.branch.address,
+        companyAddress: userData.user.hierarchy.location.address,
         companyPhone: userData.user.user.phone || 'No phone',
-        companyLogo: userData.user.branch.organization.logo,
+        companyLogo: '', // Not provided in response
 
         // User Information
         userFirstName: userData.user.user.firstName,
@@ -240,31 +267,32 @@ const useGetUser = () => {
         userIsEmailVerified: userData.user.user.isEmailVerified,
         userTwoFactorEnabled: userData.user.user.twoFactorEnabled,
 
-        // Branch Information
-        branchName: userData.user.branch.name,
-        branchAddress: userData.user.branch.address,
-        branchId: userData.user.branch.id,
+        // Branch/Location Information
+        branchName: userData.user.hierarchy.location.location_name,
+        branchAddress: userData.user.hierarchy.location.address,
+        branchId: userData.user.hierarchy.location.id,
 
         // Organization Information
-        organizationName: userData.user.branch.organization.name,
-        organizationSlug: userData.user.branch.organization.slug,
-        organizationLogo: userData.user.branch.organization.logo,
-        organizationIndustry:
-          userData.user.branch.organization.metadata?.industry,
-        organizationId: userData.user.branch.organization.id,
+        organizationName: userData.user.organization.name,
+        organizationSlug: userData.user.organization.slug,
+        organizationLogo: '', // Not provided in response
+        organizationIndustry: userData.user.organization.industry,
+        organizationId: userData.user.organization.id,
 
         // Session Information
         sessionToken: userData.user.session.token,
         sessionExpiresAt: userData.user.session.expiresAt,
         sessionUserId: userData.user.session.userId,
 
-        // User Permissions (from members array)
-        userPermissions: userData.user.members.map((member) => ({
-          roleName: member.role.name,
-          roleId: member.role.id,
-          permissions: member.role.permissions,
-          teamId: member.teamId,
+        // User Permissions (from roles array)
+        userPermissions: userData.user.roles.map((role) => ({
+          roleName: role.name,
+          roleId: role.id,
+          permissions: role.permissions,
         })),
+
+        // Hierarchy Information
+        hierarchy: userData.user.hierarchy,
 
         // Full user data for advanced usage
         fullUserData: userData.user,

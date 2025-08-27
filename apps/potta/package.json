@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "vercel-build": "npm install --legacy-peer-deps && npm run build",
+    "vercel-build": "npm install --legacy-peer-deps --include=dev && npm run build",
     "vercel-dev": "next dev --turbopack"
   },
   "keywords": [],
@@ -81,6 +81,7 @@
     "react-pro-sidebar": "^1.1.0",
     "react-resizable-panels": "^2.1.7",
     "react-select": "^5.8.0",
+    "reactflow": "^11.11.4",
     "react-tailwindcss-datepicker": "^2.0.0",
     "react-verification-input": "^4.1.2",
     "react-world-flags": "^1.6.0",

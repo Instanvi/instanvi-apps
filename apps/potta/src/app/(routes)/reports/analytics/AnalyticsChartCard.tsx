@@ -137,11 +137,14 @@ const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
         const max = Math.max(...values);
         const min = Math.min(...values);
 
+        // Determine if this is headcount data that should not use currency formatting
+        const isHeadcountData = factName === 'headcount' || metrics.includes('headcount') || metrics.includes('total_fte');
+        
         setSummary({
-          total: total.toLocaleString(),
-          average: average.toLocaleString(),
-          max: max.toLocaleString(),
-          min: min.toLocaleString(),
+          total: isHeadcountData ? total.toLocaleString() : `FCFA ${total.toLocaleString()}`,
+          average: isHeadcountData ? average.toLocaleString() : `FCFA ${average.toLocaleString()}`,
+          max: isHeadcountData ? max.toLocaleString() : `FCFA ${max.toLocaleString()}`,
+          min: isHeadcountData ? min.toLocaleString() : `FCFA ${min.toLocaleString()}`,
         });
       } catch (err) {
         console.error(`Error fetching ${factName} data:`, err);
@@ -172,10 +175,13 @@ const AnalyticsChartCard: React.FC<AnalyticsChartCardProps> = ({
 
   const isHorizontalBar = chartType === 'bar' && shouldUseHorizontalBar();
 
+  // Determine if this is headcount data that should not use currency formatting
+  const isHeadcountData = factName === 'headcount' || metrics.includes('headcount') || metrics.includes('total_fte');
+
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
-    indexAxis: isHorizontalBar ? 'y' : 'x', // This makes it horizontal
+    indexAxis: isHorizontalBar ? ('y' as const) : ('x' as const), // This makes it horizontal
     plugins: {
       legend: {
         display: false,

@@ -338,10 +338,10 @@ const ImprovedCustomNavbar = () => {
             onClick={() => setShowUserMenu(!showUserMenu)}
             className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-50 transition-all duration-200 group"
           >
-            {user?.branch?.organization?.logo ? (
+            {user?.organization?.logo ? (
               <img
-                src={user.branch.organization.logo}
-                // alt={user.branch.organization.name || 'Org Logo'}
+                src={user.organization.logo}
+                // alt={user.organization.name || 'Org Logo'}
                 className="h-8 w-8 rounded-full object-cover border border-gray-200 bg-white"
               />
             ) : (

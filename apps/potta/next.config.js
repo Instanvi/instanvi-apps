@@ -48,6 +48,12 @@ const nextConfig = {
 
   // Fixed webpack configuration - removed Critters which causes serialization issues
   webpack: (config, { dev, isServer }) => {
+    // Add path mapping for @potta/components
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@potta/components': require('path').resolve(__dirname, 'src/components'),
+    };
+
     // Only modify for client-side production builds
     if (!dev && !isServer) {
       // Add fallbacks for node modules

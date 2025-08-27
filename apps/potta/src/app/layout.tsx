@@ -45,6 +45,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} bg-[#F8F9FA]  ${geistMono.variable} antialiased`}
       >
+        
         <DataProvider>
           <AuthProvider>
             <TanstackQueryClientProvider>

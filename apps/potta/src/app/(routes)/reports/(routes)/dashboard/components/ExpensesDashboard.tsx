@@ -85,7 +85,7 @@ const ExpensesDashboard: React.FC<ExpensesDashboardProps> = ({
       const opexData = await pottaAnalyticsService.finance.getAnalytics(
         'opex',
         {
-          metrics: ['opex_amount'],
+          metrics: ['total_opex_amount'],
           dimensions: ['time'],
           time_granularity: timeGranularity,
           use_mock_data: true,
@@ -213,7 +213,7 @@ const ExpensesDashboard: React.FC<ExpensesDashboardProps> = ({
         });
 
         const paymentsData = opexData.data.map(
-          (item: any) => item.opex_amount || 0
+          (item: any) => item.total_opex_amount || 0
         );
 
         setExpensesPaymentsData({

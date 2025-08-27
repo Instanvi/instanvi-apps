@@ -225,7 +225,7 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
       const opexData = await pottaAnalyticsService.finance.getAnalytics(
         'opex',
         {
-          metrics: ['opex_amount'],
+          metrics: ['total_opex_amount'],
           dimensions: ['time'],
           time_granularity: timeGranularity,
           use_mock_data: true,
@@ -328,9 +328,10 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
 
       if (opexData.data && opexData.data.length > 0) {
         const currentOpex =
-          opexData.data[opexData.data.length - 1]?.opex_amount || 0;
+          opexData.data[opexData.data.length - 1]?.total_opex_amount || 0;
         const previousOpex =
-          opexData.data[opexData.data.length - 2]?.opex_amount || currentOpex;
+          opexData.data[opexData.data.length - 2]?.total_opex_amount ||
+          currentOpex;
         const opexGrowth =
           previousOpex > 0
             ? ((currentOpex - previousOpex) / previousOpex) * 100
@@ -540,7 +541,7 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
               <div className="text-gray-600 mb-4">{error}</div>
               <button
                 onClick={fetchBudgetingData}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 bg-green-600 text-white hover:bg-green-700 transition-colors"
               >
                 Retry
               </button>
@@ -554,17 +555,17 @@ const BudgetingDashboard: React.FC<BudgetingDashboardProps> = ({
   return (
     <div className="space-y-8">
       {/* Debug and Refresh Section */}
-      <div className="flex justify-between items-center mb-4">
+      {/* <div className="flex justify-between items-center mb-4">
         <div className="text-sm text-gray-600">
           Last updated: {new Date().toLocaleTimeString()}
         </div>
         <button
           onClick={fetchBudgetingData}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+          className="px-4 py-2 bg-green-600 text-white  hover:bg-green-700 transition-colors text-sm"
         >
           🔄 Refresh Data
         </button>
-      </div>
+      </div> */}
 
       {/* KPI Cards - 4 cards in one row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

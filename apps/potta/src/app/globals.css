@@ -401,6 +401,20 @@ html {
   background: #f3fbfb !important;
   border-radius: 3px !important;
 }
+
+/* Scrollbar hide utility */
+.scrollbar-hide {
+  /* Firefox */
+  scrollbar-width: none;
+  /* IE and Edge */
+  -ms-overflow-style: none;
+}
+
+/* Webkit browsers (Chrome, Safari, newer Edge) */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 .css-dip3t8 {
   background-color: #fff !important;
 }

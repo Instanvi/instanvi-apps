@@ -31,6 +31,7 @@ const statusOptions = [
   { label: 'Issued', value: 'Issued' },
   { label: 'Paid', value: 'Paid' },
   { label: 'Overdue', value: 'Overdue' },
+  
 ];
 
 const Filter: React.FC<FilterProps> = ({

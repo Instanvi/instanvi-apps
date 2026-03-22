@@ -1,9 +1,44 @@
-// tsconfig.json (NEW FILE at monorepo root)
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    // You might need to explicitly restate baseUrl if 'extends' doesn't fully satisfy the CLI
-    "baseUrl": "."
-  }
-  // No need to repeat paths - they are inherited from tsconfig.base.json
+    "baseUrl": ".",
+    "jsx": "preserve",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es2015",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "paths": {
+      "@potta/*": ["./src/*"],
+      "@instanvi/core": ["src/libs/core/src/index.ts"],
+      "@instanvi/core/server": ["src/libs/core/src/server.ts"],
+      "@instanvi/ui-components": ["src/libs/ui-components/src/index.ts"],
+      "@instanvi/ui-components/server": ["src/libs/ui-components/src/server.ts"],
+      "@instanvi/utilities": ["src/libs/utilities/src/index.ts"],
+      "@instanvi/utilities/server": ["src/libs/utilities/src/server.ts"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "types": ["jest", "node"]
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", "jest.config.ts", "**/*.spec.ts", "**/*.test.ts"]
 }
